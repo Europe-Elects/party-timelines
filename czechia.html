@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Czechia Party Timeline</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: register-style ledger — label column + shared year track, three lanes per party */
+:root{
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eef1f7; --surface:#ffffff; --fg:#0c1b3a; --muted:#4d5a75; --rule:#d5dbe8; --grid:#e8ecf4; --navy:#003399; --navy-ink:#ffffff; --yellow:#ffcc00;
+  --bar:#9aa1ad; --bar-soft:#c6cbd4; --line:#7b8391; --chip:#e9eef8; --link:#003399; --edge:transparent;
+
+  --display:"Advent Pro","Arial Narrow",system-ui,sans-serif;
+  --body:"Advent Pro","Arial Narrow",system-ui,sans-serif;
+  --mono:"Advent Pro","Arial Narrow",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#08122b; --surface:#0f1d3f; --fg:#eaf0ff; --muted:#a3b0cf; --rule:#22325c; --grid:#18274d; --navy:#0a2a7a; --navy-ink:#ffffff; --yellow:#ffcc00;
+  --bar:#6c7482; --bar-soft:#3f4651; --line:#8a92a0; --chip:#1a2a52; --link:#ffd84d; --edge:rgba(255,255,255,.45);
+
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#08122b; --surface:#0f1d3f; --fg:#eaf0ff; --muted:#a3b0cf; --rule:#22325c; --grid:#18274d; --navy:#0a2a7a; --navy-ink:#ffffff; --yellow:#ffcc00;
+  --bar:#6c7482; --bar-soft:#3f4651; --line:#8a92a0; --chip:#1a2a52; --link:#ffd84d; --edge:rgba(255,255,255,.45);
+
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;font-weight:500;line-height:1.4}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.band{background:var(--navy);color:var(--navy-ink);border-bottom:4px solid var(--yellow)}
+.band-in{max-width:1240px;margin:0 auto;padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:6px}
+.band a{color:var(--yellow);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+.band a:hover{text-decoration:underline}
+.band h1{color:var(--navy-ink)}
+.band .lede{color:rgba(255,255,255,.82)}
+.band .stats{color:rgba(255,255,255,.75)}
+.band .stats b{color:var(--yellow)}
+a{color:var(--link)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:22px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.crumb{font-size:13px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,46px);line-height:1;margin:0;text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+.lede{color:var(--muted);max-width:68ch;margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stats b{color:var(--fg);font-variant-numeric:tabular-nums}
+.controls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:2px;overflow:hidden;background:var(--surface)}
+.seg button{font:600 14px var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:none;border:0;padding:6px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink);box-shadow:inset 0 -3px 0 var(--yellow)}
+.seg button:focus-visible,.row:focus-visible,a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.ctl-label{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:18px;height:8px;border-radius:2px;display:inline-block}
+.lane-key{display:inline-flex;flex-direction:column;gap:2px;width:22px}
+.legend .lane-key{flex-direction:column;align-items:stretch;gap:2px}
+.lane-key i{display:block;width:22px;border-radius:1px}
+.board{background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--navy);border-radius:2px;overflow-x:auto}
+.grid{min-width:1100px;position:relative}
+.axis,.row{display:grid;grid-template-columns:270px 1fr;align-items:center}
+.axis{background:var(--surface);border-bottom:1px solid var(--rule);height:34px}
+.axis .lab{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-left:14px}
+.track{position:relative;height:100%;margin-right:18px}
+.tick{position:absolute;top:0;bottom:0;font:600 13px var(--mono);color:var(--muted);transform:translateX(-50%);display:flex;align-items:center}
+.rows{position:relative}
+.gridlines{position:absolute;inset:0 18px 0 270px;pointer-events:none}
+.gridlines i{position:absolute;top:0;bottom:0;border-left:1px solid var(--grid)}
+.row{border-bottom:1px solid var(--grid);min-height:46px;position:relative}
+.row:hover,.row:focus-visible{background:var(--chip)}
+.who{padding:7px 10px 7px 14px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.who .top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.abbr{font:700 16px var(--display);letter-spacing:.02em;overflow-wrap:anywhere}
+.name{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{font:700 11.5px var(--body);letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:3px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.chip.intl{color:var(--navy-ink);background:var(--navy)}
+.chip.off{font-style:italic}
+.chip.want{border:1px dashed var(--line);background:none}
+.lanes{position:relative;height:30px;margin-right:18px}
+.lane{position:absolute;left:0;right:0}
+.l-act{top:4px;height:2px}.l-leg{top:10px;height:7px}.l-nam{top:20px;height:7px}
+.seg-bar{position:absolute;top:0;bottom:0;border-radius:2px;min-width:3px;box-shadow:inset 0 0 0 1px var(--edge)}
+.sw{box-shadow:inset 0 0 0 1px var(--edge)}
+.l-act .seg-bar{border-radius:0}
+.open::after{content:"";position:absolute;right:-5px;top:50%;transform:translateY(-50%);border-left:5px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.l-act .open::after{border-left-width:4px;border-top-width:3px;border-bottom-width:3px;right:-4px}
+.yr{position:absolute;font:600 12px var(--mono);color:var(--muted);top:50%;transform:translate(-100%,-50%);padding-right:6px;white-space:nowrap}
+.sec-head{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:14px 14px 6px;border-top:1px solid var(--rule);background:var(--bg)}
+.undated{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px}
+.undated .chip{font-size:13px;text-transform:none;letter-spacing:.01em;padding:3px 8px;white-space:normal}
+#tip{position:fixed;z-index:20;max-width:340px;background:var(--navy);color:var(--navy-ink);border-top:3px solid var(--yellow);padding:10px 12px;border-radius:2px;font-size:14px;line-height:1.5;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+#tip b{font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+#tip .k{opacity:.7;display:inline-block;min-width:104px}
+#tip .d{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.foot{color:var(--muted);font-size:14px;max-width:80ch;margin:0}
+@media (max-width:600px){.axis,.row{grid-template-columns:170px 1fr}.gridlines{left:170px}.grid{min-width:950px}.name{font-size:13px}}
+.lanes{height:18px}
+.row{min-height:40px}
+.l-main{top:5px;height:8px}
+.l-thin{top:8px;height:2px}
+.l-thin .seg-bar{border-radius:0;box-shadow:none}
+.l-thin .open::after{border-left-width:4px;border-top-width:3px;border-bottom-width:3px;right:-4px}
+.closed{border-top-right-radius:0;border-bottom-right-radius:0}
+.closed::before{content:"";position:absolute;right:-1px;top:-3px;bottom:-3px;width:2px;background:currentColor}
+.vmark{position:absolute;top:1px;bottom:1px;width:2px;margin-left:-1px;background:var(--fg);border-radius:1px;box-shadow:0 0 0 1px var(--surface)}
+.k-fade{display:inline-block;width:28px;height:8px;border-radius:2px;background:linear-gradient(90deg,var(--bar),var(--fg))}
+.k-thin{display:inline-block;width:20px;height:2px;background:var(--bar)}
+.k-thick{display:inline-block;width:20px;height:8px;border-radius:2px;background:var(--bar)}
+.vkey{display:inline-block;width:2px;height:14px;background:var(--fg);opacity:.75;border-radius:1px}
+.join{border-left:2px solid var(--surface)}
+.was{opacity:.8;font-style:italic}
+#tip{max-width:400px}
+</style>
+</head>
+<body>
+<header class="band"><div class="band-in">
+    <a class="crumb" href="./">← All countries</a>
+    <h1>Czechia</h1>
+    <p class="lede">Each bar starts when a party began political activity. It is thin until the party registered as a legal entity, thick while registered, and stops at deregistration; ticks mark name changes. Bars stay grey where the party has no recorded affiliation (or no data yet), then take that affiliation's colour for the years of membership.</p>
+    <div class="stats" id="stats"></div>
+  </div></header>
+<div class="wrap">
+
+  <div class="controls">
+    <div><span class="ctl-label">Colour by</span><span class="seg" id="dim"></span></div>
+  </div>
+  <div class="controls">
+    <div><span class="ctl-label">Sort</span><span class="seg" id="sort">
+      <button type="button" id="s-start" aria-pressed="true" data-v="start">First activity</button>
+      <button type="button" id="s-abbr" aria-pressed="false" data-v="abbr">Abbreviation</button>
+      <button type="button" id="s-aff" aria-pressed="false" data-v="aff">Affiliation</button>
+    </span></div>
+    <div><span class="ctl-label">Show</span><span class="seg" id="filt">
+      <button type="button" id="f-all" aria-pressed="true" data-v="all">All</button>
+      <button type="button" id="f-active" aria-pressed="false" data-v="active">Active</button>
+      <button type="button" id="f-ended" aria-pressed="false" data-v="ended">Inactive</button>
+      <button type="button" id="f-aff" aria-pressed="false" data-v="aff">With affiliation</button>
+    </span></div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="board"><div class="grid" id="grid"></div></div>
+
+  <p class="foot">Arrows mark parties still active, drawn to October 2026; a square end marks deregistration. Year-only dates start at the beginning of that year; end years are drawn through the end of the year. Each row is one organisation: all versions sharing an entity ID are drawn together, with a tick at each name change; affiliation changes show as a change of colour. The tag beside each abbreviation shows the current affiliation. Parties with two affiliations are striped. The database is still being completed, so grey can also mean missing data, and where a membership's start year is not recorded the colour fades in from grey instead of starting at a fixed date. Membership colour never starts before the affiliation (or its earliest predecessor) was founded; Europarty colour starts no earlier than 2004, when Regulation 2004/2003 gave European political parties formal status. Colours follow the Political Party Database family palette (Poguntke et al., 2025). Hover or focus a row for the full record.</p>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const NOW = 2026 + 9.75/12, Y0 = 1850, Y1 = 2027, STEP = 25;
+const DIMS = [{"id": "europarty", "label": "Europarty", "full": "Europarty affiliation", "keys": {"EPP": ["#3399FF", "European People's Party"], "PES": ["#FF0000", "Party of European Socialists"], "ALDE": ["#FFD700", "ALDE Party"], "EDP": ["#fa8c00", "European Democratic Party"], "EGP": ["#009900", "European Green Party"], "EFA": ["#008080", "European Free Alliance"], "Volt": ["#502379", "Volt Europa"], "ELA": ["#fb1d79", "European Left Alliance for the People and the Planet"], "PEL": ["#990000", "Party of the European Left"], "DiEM25": ["#990000", "DiEM25 (left-wing family colour)"], "ECL": ["#7c0000", "European Communist Action"], "ECR": ["#0000FF", "European Conservatives and Reformists Party"], "ECPP": ["#a16585", "European Christian Political Party"], "ECA": ["#a16585", "European Christian Alliance (Christian family colour)"], "Patriots.eu": ["#000000", "Patriots.eu"], "ESN": ["#70463A", "Europe of Sovereign Nations"], "APF": ["#70463A", "Alliance for Peace and Freedom (far-right family colour)"], "PPEU": ["#9c36b8", "European Pirate Party"], "Animal Politics EU": ["#009076", "Animal Politics EU"]}}, {"id": "ep", "label": "EP group", "full": "European Parliament group", "keys": {"EPP": ["#3399FF", "Group of the European People's Party"], "S&D": ["#FF0000", "Socialists & Democrats"], "RE": ["#FFD700", "Renew Europe"], "Greens/EFA": ["#009900", "Greens/European Free Alliance"], "LEFT": ["#990000", "The Left"], "ECR": ["#0000FF", "European Conservatives and Reformists"], "PfE": ["#000000", "Patriots for Europe"], "ESN": ["#70463A", "Europe of Sovereign Nations"], "NI": ["#8a7f99", "Non-attached members"]}}, {"id": "pace", "label": "PACE", "full": "Parliamentary Assembly of the Council of Europe group", "keys": {"EPP/CD": ["#3399FF", "EPP/Christian Democrats"], "SOC": ["#FF0000", "Socialists, Democrats and Greens"], "ALDE": ["#FFD700", "Alliance of Liberals and Democrats for Europe"], "UEL": ["#990000", "Group of the Unified European Left"], "ECPA": ["#0000FF", "European Conservatives, Patriots & Affiliates"], "NR": ["#8a7f99", "Not registered in a group"]}}, {"id": "intl", "label": "International", "full": "International party federation", "keys": {"CDI": ["#3399FF", "Centrist Democrat International"], "SI": ["#FF0000", "Socialist International"], "PA": ["#FF0000", "Progressive Alliance"], "LI": ["#FFD700", "Liberal International"], "GG": ["#009900", "Global Greens"], "PI": ["#fb1d79", "Progressive International"], "IMCWP": ["#7c0000", "International Meeting of Communist and Workers' Parties"], "PftAIM": ["#7c0000", "Platform for the Anti-Imperialist Movement"], "WAP": ["#7c0000", "World Anti-imperialist Platform"], "IDU": ["#0000FF", "International Democracy Union"], "PPI": ["#9c36b8", "Pirate Parties International"], "IALP": ["#F2C300", "International Alliance of Libertarian Parties"]}}, {"id": "clara", "label": "CLRA", "full": "Congress of Local and Regional Authorities group", "keys": {"EPP": ["#3399FF", "European People's Party Group"], "SGPD": ["#FF0000", "Socialists, Greens and Progressive Democrats"], "ILDG": ["#FFD700", "Independent Liberal and Democratic Group"], "ECR": ["#0000FF", "European Conservatives and Reformists"], "PfE": ["#000000", "Patriots for Europe"], "NI": ["#8a7f99", "Non-attached"]}}];
+const rows = [{"i": 0, "eid": "CZ000099", "abbr": "SOCDEM", "name": "Social Democracy", "native": "Sociální Demokracie", "status": "active", "act": 1878, "lr": 1878, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["PES"], "f": 2004, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["SOC"], "f": 1964, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["SI", "PA"], "f": 1951, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["PES"], "pace": ["SOC"], "intl": ["SI", "PA"]}, "want": {}, "names": [{"abbr": "SOCDEM", "name": "Social Democracy", "s": 2023, "e": null}], "vers": [{"vid": "CZ000099.v1", "status": "active", "s": 1878, "e": null, "abbr": "SOCDEM", "name": "Social Democracy", "a": {"europarty": ["PES"], "pace": ["SOC"], "intl": ["SI", "PA"]}}], "former": [], "reg": "99", "ideo": "Centre-left"}, {"i": 1, "eid": "CZ000107", "abbr": "KSČM", "name": "Communist Party of Bohemia and Moravia", "native": "Komunistická strana Čech a Moravy", "status": "active", "act": 1921, "lr": 1921, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["PEL"], "f": 2004, "t": 2026, "v": 0}, {"k": ["PEL"], "f": 2004, "t": null, "v": 1}], "ep": [{"k": ["NI"], "f": 2024, "t": 2026, "v": 0}, {"k": ["PfE"], "f": 2026, "t": null, "v": 1}], "intl": [{"k": ["IMCWP"], "f": 1998, "t": 2026, "v": 0, "u": 1}, {"k": ["IMCWP"], "f": 2026, "t": null, "v": 1}]}, "cur": {"europarty": ["PEL"], "ep": ["PfE"], "intl": ["IMCWP"]}, "want": {}, "names": [{"abbr": "KSČM", "name": "Communist Party of Bohemia and Moravia", "s": 1990, "e": null}], "vers": [{"vid": "CZ000107.v1", "status": "realigned", "s": 1921, "e": 2026, "abbr": "KSČM", "name": "Communist Party of Bohemia and Moravia", "a": {"europarty": ["PEL"], "ep": ["NI"], "intl": ["IMCWP"]}}, {"vid": "CZ000107.v2", "status": "active", "s": 2026, "e": null, "abbr": "KSČM", "name": "Communist Party of Bohemia and Moravia", "a": {"europarty": ["PEL"], "ep": ["PfE"], "intl": ["IMCWP"]}}], "former": [], "reg": "107", "ideo": "Diverse"}, {"i": 2, "eid": "CZ000112", "abbr": "KDU–ČSL", "name": "Christian and Democratic Union – Czechoslovak People's Party", "native": "Křesťanská a Demokratická Unie – Československá Strana Lidová", "status": "active", "act": 1919, "lr": 1919, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["EPP"], "f": 2004, "t": null, "v": 0}], "ep": [{"k": ["EPP"], "f": 1953, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["EPP/CD"], "f": 1964, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["CDI"], "f": 1961, "t": null, "v": 0, "u": 1}], "clara": [{"k": ["EPP"], "f": 1957, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["EPP"], "ep": ["EPP"], "pace": ["EPP/CD"], "intl": ["CDI"], "clara": ["EPP"]}, "want": {}, "names": [{"abbr": "KDU–ČSL", "name": "Christian and Democratic Union – Czechoslovak People's Party", "s": 1992, "e": null}], "vers": [{"vid": "CZ000112.v1", "status": "active", "s": 1919, "e": null, "abbr": "KDU–ČSL", "name": "Christian and Democratic Union – Czechoslovak People's Party", "a": {"europarty": ["EPP"], "ep": ["EPP"], "pace": ["EPP/CD"], "intl": ["CDI"], "clara": ["EPP"]}}], "former": [], "reg": "112", "ideo": "Centre-right"}, {"i": 3, "eid": "CZ000120", "abbr": "ODS", "name": "Civic Democratic Party", "native": "Občanská Demokratická Strana", "status": "active", "act": 1991, "lr": 1991, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["ECR"], "f": 2009, "t": null, "v": 0}], "ep": [{"k": ["ECR"], "f": 2009, "t": null, "v": 0}], "pace": [{"k": ["ECPA"], "f": 1991, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["IDU"], "f": 1991, "t": null, "v": 0, "u": 1}], "clara": [{"k": ["ECR"], "f": 1991, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["ECR"], "ep": ["ECR"], "pace": ["ECPA"], "intl": ["IDU"], "clara": ["ECR"]}, "want": {}, "names": [{"abbr": "ODS", "name": "Civic Democratic Party", "s": 1991, "e": null}], "vers": [{"vid": "CZ000120.v1", "status": "active", "s": 1991, "e": null, "abbr": "ODS", "name": "Civic Democratic Party", "a": {"europarty": ["ECR"], "ep": ["ECR"], "pace": ["ECPA"], "intl": ["IDU"], "clara": ["ECR"]}}], "former": [], "reg": "120", "ideo": "National conservatism"}, {"i": 4, "eid": "CZ000142", "abbr": "Zelení", "name": "Green Party", "native": "Strana Zelených", "status": "active", "act": 1990, "lr": 1990, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["EGP"], "f": 2004, "t": null, "v": 0}], "pace": [{"k": ["SOC"], "f": 1990, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["GG"], "f": 2001, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["EGP"], "pace": ["SOC"], "intl": ["GG"]}, "want": {}, "names": [{"abbr": "Zelení", "name": "Green Party", "s": 1990, "e": null}], "vers": [{"vid": "CZ000142.v1", "status": "active", "s": 1990, "e": null, "abbr": "Zelení", "name": "Green Party", "a": {"europarty": ["EGP"], "pace": ["SOC"], "intl": ["GG"]}}], "former": [], "reg": "142", "ideo": "Green politics"}, {"i": 5, "eid": "CZ000228", "abbr": "STAN", "name": "Mayors and independents", "native": "Starostové a nezávislí", "status": "active", "act": 2004, "lr": 2004, "ld": null, "nd": null, "aff": {"ep": [{"k": ["EPP"], "f": 2024, "t": null, "v": 0}], "pace": [{"k": ["EPP/CD"], "f": 2004, "t": null, "v": 0, "u": 1}], "clara": [{"k": ["EPP"], "f": 2004, "t": null, "v": 0, "u": 1}]}, "cur": {"ep": ["EPP"], "pace": ["EPP/CD"], "clara": ["EPP"]}, "want": {}, "names": [{"abbr": "STAN", "name": "Mayors and independents", "s": 2009, "e": null}], "vers": [{"vid": "CZ000228.v1", "status": "active", "s": 2004, "e": null, "abbr": "STAN", "name": "Mayors and independents", "a": {"ep": ["EPP"], "pace": ["EPP/CD"], "clara": ["EPP"]}}], "former": [], "reg": "228", "ideo": "Centre-right"}, {"i": 6, "eid": "CZ000234", "abbr": "SLK", "name": "Mayors for the Liberec Region", "native": "Starostové pro Liberecký kraj", "status": "active", "act": 2008, "lr": 2008, "ld": null, "nd": null, "aff": {"clara": [{"k": ["EPP"], "f": 2008, "t": null, "v": 0, "u": 1}]}, "cur": {"clara": ["EPP"]}, "want": {}, "names": [{"abbr": "SLK", "name": "Mayors for the Liberec Region", "s": 2008, "e": null}], "vers": [{"vid": "CZ000234.v1", "status": "active", "s": 2008, "e": null, "abbr": "SLK", "name": "Mayors for the Liberec Region", "a": {"clara": ["EPP"]}}], "former": [], "reg": "234", "ideo": "Regionalism"}, {"i": 7, "eid": "CZ000312", "abbr": "Svobodní", "name": "The Free", "native": "Svobodní", "status": "active", "act": 2009, "lr": 2009, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Svobodní", "name": "The Free", "s": 2009, "e": null}], "vers": [{"vid": "CZ000312.v1", "status": "active", "s": 2009, "e": null, "abbr": "Svobodní", "name": "The Free", "a": {}}], "former": [], "reg": "312", "ideo": "Libertarian"}, {"i": 8, "eid": "CZ000320", "abbr": "Piráti", "name": "Czech Pirate Party", "native": "Česká Pirátská Strana", "status": "active", "act": 2009, "lr": 2009, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["PPEU"], "f": 2014, "t": null, "v": 0}], "ep": [{"k": ["Greens/EFA"], "f": 2009, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["ALDE"], "f": 2009, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["PPI"], "f": 2010, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["PPEU"], "ep": ["Greens/EFA"], "pace": ["ALDE"], "intl": ["PPI"]}, "want": {}, "names": [{"abbr": "Piráti", "name": "Czech Pirate Party", "s": 2009, "e": null}], "vers": [{"vid": "CZ000320.v1", "status": "active", "s": 2009, "e": null, "abbr": "Piráti", "name": "Czech Pirate Party", "a": {"europarty": ["PPEU"], "ep": ["Greens/EFA"], "pace": ["ALDE"], "intl": ["PPI"]}}], "former": [], "reg": "320", "ideo": "Pirate politics"}, {"i": 9, "eid": "CZ000321", "abbr": "TOP 09", "name": "Tradition Responsibility Prosperity", "native": "Tradice Odpovědnost Prosperita", "status": "active", "act": 2009, "lr": 2009, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["EPP"], "f": 2011, "t": null, "v": 0}], "ep": [{"k": ["EPP"], "f": 2009, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["EPP"], "ep": ["EPP"]}, "want": {}, "names": [{"abbr": "TOP 09", "name": "Tradition Responsibility Prosperity", "s": 2009, "e": null}], "vers": [{"vid": "CZ000321.v1", "status": "active", "s": 2009, "e": null, "abbr": "TOP 09", "name": "Tradition Responsibility Prosperity", "a": {"europarty": ["EPP"], "ep": ["EPP"]}}], "former": [], "reg": "321", "ideo": "Centre-right"}, {"i": 10, "eid": "CZ000362", "abbr": "ANS", "name": "Alliance of National Forces", "native": "Aliance Národních Sil", "status": "inactive", "act": 2011, "lr": 2011, "ld": 2024, "nd": 2024, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "ANS", "name": "Alliance of National Forces", "s": 2018, "e": 2024}], "vers": [{"vid": "CZ000362.v1", "status": "inactive", "s": 2011, "e": null, "abbr": "ANS", "name": "Alliance of National Forces", "a": {}}], "former": [], "reg": "362", "ideo": "Right-wing"}, {"i": 11, "eid": "CZ000368", "abbr": "ANO", "name": "YES 2011", "native": "ANO 2011", "status": "active", "act": 2012, "lr": 2012, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["Patriots.eu"], "f": 2024, "t": null, "v": 0}], "ep": [{"k": ["PfE"], "f": 2015, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["ECPA"], "f": 2012, "t": null, "v": 0, "u": 1}], "clara": [{"k": ["PfE"], "f": 2012, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["Patriots.eu"], "ep": ["PfE"], "pace": ["ECPA"], "clara": ["PfE"]}, "want": {}, "names": [{"abbr": "ANO", "name": "YES 2011", "s": 2012, "e": null}], "vers": [{"vid": "CZ000368.v1", "status": "active", "s": 2012, "e": null, "abbr": "ANO", "name": "YES 2011", "a": {"europarty": ["Patriots.eu"], "ep": ["PfE"], "pace": ["ECPA"], "clara": ["PfE"]}}], "former": [], "reg": "368", "ideo": "Right-wing"}, {"i": 12, "eid": "CZ000468", "abbr": "SPD", "name": "Freedom and Direct Democracy", "native": "Svoboda a Přímá Demokracie", "status": "active", "act": 2015, "lr": 2015, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["ESN"], "f": 2024, "t": null, "v": 0}], "ep": [{"k": ["ESN"], "f": 2024, "t": null, "v": 0}], "pace": [{"k": ["ECPA"], "f": 2015, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["ESN"], "ep": ["ESN"], "pace": ["ECPA"]}, "want": {}, "names": [{"abbr": "SPD", "name": "Freedom and Direct Democracy", "s": 2015, "e": null}], "vers": [{"vid": "CZ000468.v1", "status": "active", "s": 2015, "e": null, "abbr": "SPD", "name": "Freedom and Direct Democracy", "a": {"europarty": ["ESN"], "ep": ["ESN"], "pace": ["ECPA"]}}], "former": [], "reg": "468", "ideo": "Far-right"}, {"i": 13, "eid": "CZ000501", "abbr": "AUTO", "name": "Motorists for Themselves", "native": "Motoristé Sobě", "status": "active", "act": 2017, "lr": 2017, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["Patriots.eu"], "f": 2024, "t": null, "v": 0}], "ep": [{"k": ["PfE"], "f": 2017, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["ECPA"], "f": 2017, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["Patriots.eu"], "ep": ["PfE"], "pace": ["ECPA"]}, "want": {}, "names": [{"abbr": "AUTO", "name": "Motorists for Themselves", "s": 2022, "e": null}], "vers": [{"vid": "CZ000501.v1", "status": "active", "s": 2017, "e": null, "abbr": "AUTO", "name": "Motorists for Themselves", "a": {"europarty": ["Patriots.eu"], "ep": ["PfE"], "pace": ["ECPA"]}}], "former": [], "reg": "501", "ideo": "Right-wing"}, {"i": 14, "eid": "CZ000548", "abbr": "Jednotní", "name": "United - an alternative for patriots", "native": "Jednotní – alternativa pro patrioty", "status": "inactive", "act": 2019, "lr": 2019, "ld": 2022, "nd": 2022, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Jednotní", "name": "United - an alternative for patriots", "s": 2019, "e": 2022}], "vers": [{"vid": "CZ000548.v1", "status": "inactive", "s": 2019, "e": null, "abbr": "Jednotní", "name": "United - an alternative for patriots", "a": {}}], "former": [], "reg": "548", "ideo": "Right-wing"}, {"i": 15, "eid": "CZ000550", "abbr": "Trikolora", "name": "Tricolor", "native": "Trikolora", "status": "active", "act": 2019, "lr": 2019, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Trikolora", "name": "Tricolor", "s": 2019, "e": null}], "vers": [{"vid": "CZ000550.v1", "status": "active", "s": 2019, "e": null, "abbr": "Trikolora", "name": "Tricolor", "a": {}}], "former": [], "reg": "550", "ideo": "Far-right"}, {"i": 16, "eid": "CZ000568", "abbr": "Přísaha", "name": "Oath Civic Movement", "native": "Přísaha občanské hnutí", "status": "active", "act": 2021, "lr": 2021, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["Patriots.eu"], "f": 2024, "t": 2026, "v": 0}], "ep": [{"k": ["PfE"], "f": 2024, "t": 2026, "v": 0}, {"k": ["NI"], "f": 2026, "t": null, "v": 1}]}, "cur": {"ep": ["NI"]}, "want": {}, "names": [{"abbr": "Přísaha", "name": "Oath Civic Movement", "s": 2023, "e": null}], "vers": [{"vid": "CZ000568.v1", "status": "realigned", "s": 2021, "e": 2026, "abbr": "Přísaha", "name": "Oath Civic Movement", "a": {"europarty": ["Patriots.eu"], "ep": ["PfE"]}}, {"vid": "CZ000568.v2", "status": "active", "s": 2026, "e": null, "abbr": "Přísaha", "name": "Oath Civic Movement", "a": {"ep": ["NI"]}}], "former": [], "reg": "568", "ideo": "Right-wing"}, {"i": 17, "eid": "CZ000584", "abbr": "PRO", "name": "PRO Law Respect Expertise", "native": "PRO Právo Respekt Odbornost", "status": "active", "act": 2022, "lr": 2022, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "PRO", "name": "PRO Law Respect Expertise", "s": 2022, "e": null}], "vers": [{"vid": "CZ000584.v1", "status": "active", "s": 2022, "e": null, "abbr": "PRO", "name": "PRO Law Respect Expertise", "a": {}}], "former": [], "reg": "584", "ideo": "Right-wing"}, {"i": 18, "eid": "CZ000622", "abbr": "Stačilo!", "name": "Enough!", "native": "Stačilo!", "status": "active", "act": 2024, "lr": 2024, "ld": null, "nd": null, "aff": {"ep": [{"k": ["NI"], "f": 2024, "t": 2026, "v": 0}, {"k": ["PfE"], "f": 2026, "t": null, "v": 1}]}, "cur": {"ep": ["PfE"]}, "want": {}, "names": [{"abbr": "Stačilo!", "name": "Enough!", "s": 2024, "e": null}], "vers": [{"vid": "CZ000622.v1", "status": "realigned", "s": 2024, "e": 2026, "abbr": "Stačilo!", "name": "Enough!", "a": {"ep": ["NI"]}}, {"vid": "CZ000622.v2", "status": "active", "s": 2026, "e": null, "abbr": "Stačilo!", "name": "Enough!", "a": {"ep": ["PfE"]}}], "former": [], "reg": "622", "ideo": "Left-wing"}, {"i": 19, "eid": "CZ000643", "abbr": "NČ", "name": "Our Czechia", "native": "Naše Česko", "status": "active", "act": 2026, "lr": 2026, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "NČ", "name": "Our Czechia", "s": 2026, "e": null}], "vers": [{"vid": "CZ000643.v1", "status": "active", "s": 2026, "e": null, "abbr": "NČ", "name": "Our Czechia", "a": {}}], "former": [], "reg": "643", "ideo": "Centre-right"}, {"i": 20, "eid": "CZ200062", "abbr": "SD-SN", "name": "United Democrats – Association of Independents", "native": "Spojení demokraté – Sdružení nezávislých", "status": "active", "act": 2002, "lr": 2002, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["ECPP"], "f": 2026, "t": null, "v": 1}], "ep": [{"k": ["NI"], "f": 2002, "t": 2026, "v": 0, "u": 1}, {"k": ["NI"], "f": 2026, "t": null, "v": 1}]}, "cur": {"europarty": ["ECPP"], "ep": ["NI"]}, "want": {}, "names": [{"abbr": "SD-SN", "name": "United Democrats – Association of Independents", "s": 2006, "e": null}], "vers": [{"vid": "CZ200062.v1", "status": "realigned", "s": 2002, "e": 2026, "abbr": "SD-SN", "name": "United Democrats – Association of Independents", "a": {"ep": ["NI"]}}, {"vid": "CZ200062.v2", "status": "active", "s": 2026, "e": null, "abbr": "SD-SN", "name": "United Democrats – Association of Independents", "a": {"europarty": ["ECPP"], "ep": ["NI"]}}], "former": [], "reg": "262", "ideo": "National conservatism"}, {"i": 21, "eid": "CZ000613", "abbr": "Generace", "name": "Generation Movement", "native": "Hnutí Generace", "status": "active", "act": 2024, "lr": 2024, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Generace", "name": "Generation Movement", "s": 2024, "e": null}], "vers": [{"vid": "CZ000613.v1", "status": "active", "s": 2024, "e": null, "abbr": "Generace", "name": "Generation Movement", "a": {}}], "former": [], "reg": "613", "ideo": "Centre-right"}, {"i": 22, "eid": "CZ000503", "abbr": "PRAHA SOBĚ", "name": "Prague City Party PRAGUE FOR ITSELF", "native": "Pražská městská strana PRAHA SOBĚ", "status": "active", "act": 2017, "lr": 2017, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "PRAHA SOBĚ", "name": "Prague City Party PRAGUE FOR ITSELF", "s": 2024, "e": null}], "vers": [{"vid": "CZ000503.v1", "status": "active", "s": 2017, "e": null, "abbr": "PRAHA SOBĚ", "name": "Prague City Party PRAGUE FOR ITSELF", "a": {}}], "former": [], "reg": "503", "ideo": "Regionalism"}, {"i": 23, "eid": "CZ000510", "abbr": "SEN 21", "name": "Dream 21", "native": "SEN 21", "status": "active", "act": 2017, "lr": 2017, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["EDP"], "f": 2019, "t": null, "v": 0}]}, "cur": {"europarty": ["EDP"]}, "want": {}, "names": [{"abbr": "SEN 21", "name": "Dream 21", "s": 2017, "e": null}], "vers": [{"vid": "CZ000510.v1", "status": "active", "s": 2017, "e": null, "abbr": "SEN 21", "name": "Dream 21", "a": {"europarty": ["EDP"]}}], "former": [], "reg": "510", "ideo": "Liberalism"}, {"i": 24, "eid": "CZ000313", "abbr": "DSZ - ZA PRÁVA ZVÍŘAT", "name": "Democratic Green Party - FOR ANIMAL RIGHTS", "native": "Demokratická strana zelených - ZA PRÁVA ZVÍŘAT", "status": "active", "act": 2009, "lr": 2009, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "DSZ - ZA PRÁVA ZVÍŘAT", "name": "Democratic Green Party - FOR ANIMAL RIGHTS", "s": 2009, "e": null}], "vers": [{"vid": "CZ000313.v1", "status": "active", "s": 2009, "e": null, "abbr": "DSZ - ZA PRÁVA ZVÍŘAT", "name": "Democratic Green Party - FOR ANIMAL RIGHTS", "a": {}}], "former": [], "reg": "313", "ideo": "Animal rights"}, {"i": 25, "eid": "CZ000404", "abbr": "Patrioti ČR", "name": "Patriots of the Czech Republic", "native": "Patrioti České republiky", "status": "active", "act": 2014, "lr": 2014, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Patrioti ČR", "name": "Patriots of the Czech Republic", "s": 2014, "e": null}], "vers": [{"vid": "CZ000404.v1", "status": "active", "s": 2014, "e": null, "abbr": "Patrioti ČR", "name": "Patriots of the Czech Republic", "a": {}}], "former": [], "reg": "404", "ideo": "National conservatism"}, {"i": 26, "eid": "CZ000627", "abbr": "Voluntia", "name": "Libertarian Party Voluntia", "native": "Libertariánská strana Voluntia", "status": "active", "act": 2025, "lr": 2025, "ld": null, "nd": null, "aff": {"intl": [{"k": ["IALP"], "f": 2025, "t": null, "v": 0}]}, "cur": {"intl": ["IALP"]}, "want": {}, "names": [{"abbr": "Voluntia", "name": "Libertarian Party Voluntia", "s": 2025, "e": null}], "vers": [{"vid": "CZ000627.v1", "status": "active", "s": 2025, "e": null, "abbr": "Voluntia", "name": "Libertarian Party Voluntia", "a": {"intl": ["IALP"]}}], "former": [], "reg": "627", "ideo": "Libertarian"}, {"i": 27, "eid": "CZ000623", "abbr": "GEN", "name": "Generation Economy Hope", "native": "Generace Ekonomika Naděje", "status": "active", "act": 2024, "lr": 2024, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "GEN", "name": "Generation Economy Hope", "s": 2024, "e": null}], "vers": [{"vid": "CZ000623.v1", "status": "active", "s": 2024, "e": null, "abbr": "GEN", "name": "Generation Economy Hope", "a": {}}], "former": [], "reg": "623", "ideo": "Centrism"}, {"i": 28, "eid": "CZ000610", "abbr": "LANO", "name": "Liberal Alliance of Independent Citizens", "native": "Liberální aliance nezávislých občanů", "status": "active", "act": 2024, "lr": 2024, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "LANO", "name": "Liberal Alliance of Independent Citizens", "s": 2024, "e": null}], "vers": [{"vid": "CZ000610.v1", "status": "active", "s": 2024, "e": null, "abbr": "LANO", "name": "Liberal Alliance of Independent Citizens", "a": {}}], "former": [], "reg": "610", "ideo": "Liberalism"}, {"i": 29, "eid": "CZ000631", "abbr": "Rebelové", "name": "Rebels", "native": "Rebelové", "status": "active", "act": 2025, "lr": 2025, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Rebelové", "name": "Rebels", "s": 2025, "e": null}], "vers": [{"vid": "CZ000631.v1", "status": "active", "s": 2025, "e": null, "abbr": "Rebelové", "name": "Rebels", "a": {}}], "former": [], "reg": "631", "ideo": "Diverse"}, {"i": 30, "eid": "CZ000264", "abbr": "SNK ED", "name": "SNK European Democrats", "native": "SNK Evropští demokraté", "status": "active", "act": 2000, "lr": 2000, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "SNK ED", "name": "SNK European Democrats", "s": 2006, "e": null}], "vers": [{"vid": "CZ000264.v1", "status": "active", "s": 2000, "e": null, "abbr": "SNK ED", "name": "SNK European Democrats", "a": {}}], "former": [], "reg": "264", "ideo": "Centre-right"}, {"i": 31, "eid": "CZ000133", "abbr": "Levice", "name": "Left", "native": "Levice", "status": "active", "act": 1993, "lr": 1993, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["PEL"], "f": 2004, "t": null, "v": 0}]}, "cur": {"europarty": ["PEL"]}, "want": {}, "names": [{"abbr": "Levice", "name": "Left", "s": 2020, "e": null}], "vers": [{"vid": "CZ000133.v1", "status": "active", "s": 1993, "e": null, "abbr": "Levice", "name": "Left", "a": {"europarty": ["PEL"]}}], "former": [], "reg": "133", "ideo": "Left-wing"}, {"i": 32, "eid": "CZ000637", "abbr": "ČSA", "name": "Czech Anti-Social Party", "native": "Česká strana Asociálů", "status": "active", "act": 2026, "lr": 2026, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "ČSA", "name": "Czech Anti-Social Party", "s": 2026, "e": null}], "vers": [{"vid": "CZ000637.v1", "status": "active", "s": 2026, "e": null, "abbr": "ČSA", "name": "Czech Anti-Social Party", "a": {}}], "former": [], "reg": "637", "ideo": "Diverse"}, {"i": 33, "eid": "CZ000304", "abbr": "Volte Pravý Blok www.cibulka.net", "name": "Vote for the Right Block—the party that stands for the easy and quick RECALL of politicians and government officials DIRECTLY BY CITIZENS, for LOW taxes, a BALANCED budget, MINIMIZING bureaucracy, a FAIR and UNCORRUPTED police force and judiciary, REFERENDUMS and DIRECT democracy at WWW.CIBULKA.NET, running on the best anti-crime platform for DIRECT democracy and a profound national, spiritual, and moral revival. DON’T YOU TRUST POLITICIANS AND THEIR JOURNALISTS? WELL, FINALLY! LET’S TRUST OURSELVES!!! — but also for many other REASONS why we should ALL GO TO THE POLLS this time, but—if we don’t want to be LIED TO, DECEIVED, and ROBBED AGAIN—DO NOT VOTE FOR ANY PARLIAMENTARY SCAM — THE PARTY of the ruling (post-)communist RUSSIAN-CZECH totalitarian POLICE STATE and their destructive, anti-national policies: THE WORSE, THE BETTER!!! —which calls for the electoral support of ALL CZECH CITIZENS and taxpayers who want to transform today’s criminal conditions, of which we are all victims, into their exact opposite! IN THE STRUGGLE BETWEEN GOOD AND EVIL, TRUTH AND LIES, ONE CANNOT BE NEUTRAL AND STILL REMAIN DECENT!!! That is why we thank you for your support!!! If you do not believe in humility before the executioner’s cart, if our slate of candidates seems imperfect to you, or if you do not see a representative from your town or city on it—yet you HAVE THE COURAGE in this war between the People of Good and the ruling People of Evil to rise up from the civic unconsciousness they have imposed on us, through which they are destroying us, and to fundamentally change today’s DEMOCRATUR, HIDDEN TOTALITARIANISM, and SLAVERY OF A HIGHER ORDER—RUN FOR OFFICE WITH US!!! Contact: Vote for the True Block www.cibulka.net, PO BOX 595, 170 00 Praha 7", "native": "Volte Pravý Blok - stranu za snadnou a rychlou ODVOLATELNOST politiků a státních úředníků PŘÍMO OBČANY, za NÍZKÉ daně, VYROVNANÝ rozpočet, MINIMALIZACI byrokracie, SPRAVEDLIVOU a NEZKORUMPOVANOU policii a justici, REFERENDA a PŘÍMOU demokracii WWW.CIBULKA.NET, kandidující s nejlepším protikriminálním programem PŘÍMÉ demokracie a hlubokého národního, duchovního a mravního obrození VY NEVĚŘÍTE POLITIKŮM A JEJICH NOVINÁŘŮM? NO KONEČNĚ! VĚŘME SAMI SOBĚ!!! - ale i s mnoha dalšími DŮVODY, proč bychom měli jít tentokrát VŠICHNI K VOLBÁM, ale - pokud nechceme být ZNOVU obelháni, podvedeni a okradeni - NEVOLIT ŽÁDNOU PARLAMENTNÍ TUNEL - STRANU vládnoucí (post) komunistické RUSKO - ČESKÉ totalitní FÍZLOKRACIE a jejich likvidační protinárodní politiku ČÍM HŮŘE, TÍM LÉPE!!! - jenž žádá o volební podporu VŠECHNY ČESKÉ OBČANY a daňové poplatníky, kteří chtějí změnit dnešní kriminální poměry, jejichž jsme všichni obětí, v jejich pravý opak! V BOJI MEZI DOBREM A ZLEM, PRAVDOU A LŽÍ, NELZE BÝT NEUTRÁLNÍ A PŘESTO ZŮSTAT SLUŠNÝ!!! Proto děkujeme za Vaši podporu!!! Nevěříte-li na pokoru u popravčí káry, zdá-li se vám naše kandidátka málo dokonalá nebo postrádáte-li na ní zástupce své obce nebo města a přitom MÁTE ODVAHU v této válce Lidí Dobra s vládnoucími Lidmi Zla povstat z jimi naordinovaného občanského bezvědomí, kterým nás ničí a dnešní DEMOKRATURU, SKRYTOU TOTALITU a OTROKÁŘSTVÍ VYŠŠÍHO ŘÁDU zásadním způsobem změnit, KANDIDUJTE ZA NÁS!!! Kontakt: Volte Pravý Blok www.cibulka.net, PO BOX 595, 170 00 Praha 7", "status": "active", "act": 1996, "lr": 1996, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Volte Pravý Blok www.cibulka.net", "name": "Vote for the Right Block—the party that stands for the easy and quick RECALL of politicians and government officials DIRECTLY BY CITIZENS, for LOW taxes, a BALANCED budget, MINIMIZING bureaucracy, a FAIR and UNCORRUPTED police force and judiciary, REFERENDUMS and DIRECT democracy at WWW.CIBULKA.NET, running on the best anti-crime platform for DIRECT democracy and a profound national, spiritual, and moral revival. DON’T YOU TRUST POLITICIANS AND THEIR JOURNALISTS? WELL, FINALLY! LET’S TRUST OURSELVES!!! — but also for many other REASONS why we should ALL GO TO THE POLLS this time, but—if we don’t want to be LIED TO, DECEIVED, and ROBBED AGAIN—DO NOT VOTE FOR ANY PARLIAMENTARY SCAM — THE PARTY of the ruling (post-)communist RUSSIAN-CZECH totalitarian POLICE STATE and their destructive, anti-national policies: THE WORSE, THE BETTER!!! —which calls for the electoral support of ALL CZECH CITIZENS and taxpayers who want to transform today’s criminal conditions, of which we are all victims, into their exact opposite! IN THE STRUGGLE BETWEEN GOOD AND EVIL, TRUTH AND LIES, ONE CANNOT BE NEUTRAL AND STILL REMAIN DECENT!!! That is why we thank you for your support!!! If you do not believe in humility before the executioner’s cart, if our slate of candidates seems imperfect to you, or if you do not see a representative from your town or city on it—yet you HAVE THE COURAGE in this war between the People of Good and the ruling People of Evil to rise up from the civic unconsciousness they have imposed on us, through which they are destroying us, and to fundamentally change today’s DEMOCRATUR, HIDDEN TOTALITARIANISM, and SLAVERY OF A HIGHER ORDER—RUN FOR OFFICE WITH US!!! Contact: Vote for the True Block www.cibulka.net, PO BOX 595, 170 00 Praha 7", "s": 1996, "e": null}], "vers": [{"vid": "CZ000304.v1", "status": "active", "s": 1996, "e": null, "abbr": "Volte Pravý Blok www.cibulka.net", "name": "Vote for the Right Block—the party that stands for the easy and quick RECALL of politicians and government officials DIRECTLY BY CITIZENS, for LOW taxes, a BALANCED budget, MINIMIZING bureaucracy, a FAIR and UNCORRUPTED police force and judiciary, REFERENDUMS and DIRECT democracy at WWW.CIBULKA.NET, running on the best anti-crime platform for DIRECT democracy and a profound national, spiritual, and moral revival. DON’T YOU TRUST POLITICIANS AND THEIR JOURNALISTS? WELL, FINALLY! LET’S TRUST OURSELVES!!! — but also for many other REASONS why we should ALL GO TO THE POLLS this time, but—if we don’t want to be LIED TO, DECEIVED, and ROBBED AGAIN—DO NOT VOTE FOR ANY PARLIAMENTARY SCAM — THE PARTY of the ruling (post-)communist RUSSIAN-CZECH totalitarian POLICE STATE and their destructive, anti-national policies: THE WORSE, THE BETTER!!! —which calls for the electoral support of ALL CZECH CITIZENS and taxpayers who want to transform today’s criminal conditions, of which we are all victims, into their exact opposite! IN THE STRUGGLE BETWEEN GOOD AND EVIL, TRUTH AND LIES, ONE CANNOT BE NEUTRAL AND STILL REMAIN DECENT!!! That is why we thank you for your support!!! If you do not believe in humility before the executioner’s cart, if our slate of candidates seems imperfect to you, or if you do not see a representative from your town or city on it—yet you HAVE THE COURAGE in this war between the People of Good and the ruling People of Evil to rise up from the civic unconsciousness they have imposed on us, through which they are destroying us, and to fundamentally change today’s DEMOCRATUR, HIDDEN TOTALITARIANISM, and SLAVERY OF A HIGHER ORDER—RUN FOR OFFICE WITH US!!! Contact: Vote for the True Block www.cibulka.net, PO BOX 595, 170 00 Praha 7", "a": {}}], "former": [], "reg": "304", "ideo": "National conservatism"}, {"i": 34, "eid": "CZ000612", "abbr": "mimozemstani.eu", "name": "YES BETTER CZECHIA WITH ALIENS AND CITIZENS MOTORISTS", "native": "ANO LEPŠÍ ČESKO S MIMOZEMŠŤANY A OBČANY MOTORISTY", "status": "active", "act": 2024, "lr": 2024, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "mimozemstani.eu", "name": "YES BETTER CZECHIA WITH ALIENS AND CITIZENS MOTORISTS", "s": 2024, "e": null}], "vers": [{"vid": "CZ000612.v1", "status": "active", "s": 2024, "e": null, "abbr": "mimozemstani.eu", "name": "YES BETTER CZECHIA WITH ALIENS AND CITIZENS MOTORISTS", "a": {}}], "former": [], "reg": "612", "ideo": "Diverse"}, {"i": 35, "eid": "CZ000573", "abbr": "Nevolte Urza.cz", "name": "Urza.cz: We don’t want your votes; freedom cannot be achieved through elections. We will refuse any political office; after all, we don’t want to tell people how to live their lives. We have a different vision. We’re taking a different path—you can find it at www.urza.cz.", "native": "Urza.cz: Nechceme vaše hlasy; ke svobodě se nelze provolit. Odmítneme každou politickou funkci; nechceme totiž lidem nařizovat, jak mají žít. Máme jinou vizi. Jdeme jinou cestou — najdete ji na webu www.urza.cz.", "status": "active", "act": 2021, "lr": 2021, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "Nevolte Urza.cz", "name": "Urza.cz: We don’t want your votes; freedom cannot be achieved through elections. We will refuse any political office; after all, we don’t want to tell people how to live their lives. We have a different vision. We’re taking a different path—you can find it at www.urza.cz.", "s": 2021, "e": null}], "vers": [{"vid": "CZ000573.v1", "status": "active", "s": 2021, "e": null, "abbr": "Nevolte Urza.cz", "name": "Urza.cz: We don’t want your votes; freedom cannot be achieved through elections. We will refuse any political office; after all, we don’t want to tell people how to live their lives. We have a different vision. We’re taking a different path—you can find it at www.urza.cz.", "a": {}}], "former": [], "reg": "573", "ideo": "Libertarian"}, {"i": 36, "eid": "CZ000116", "abbr": "LŽPL", "name": "A BETTER LIFE FOR PEOPLE – abolish the property tax, set the minimum wage at 50,000 CZK, set the minimum pension at 30,000 CZK, return energy prices to 2019 levels, ensure stores carry the highest-quality goods at prices everyone can afford, STOP the war", "native": "LEPŠÍ ŽIVOT PRO LIDI – zrušení daně z nemovitostí, min. mzda 50.000 Kč, min. důchod 30.000 Kč, návrat cen energií na ceny z roku 2019, v obchodech zboží nejvyšší kvality za ceny dostupné pro každého, STOP válce", "status": "active", "act": 1999, "lr": 1999, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "LŽPL", "name": "A BETTER LIFE FOR PEOPLE – abolish the property tax, set the minimum wage at 50,000 CZK, set the minimum pension at 30,000 CZK, return energy prices to 2019 levels, ensure stores carry the highest-quality goods at prices everyone can afford, STOP the war", "s": 2024, "e": null}], "vers": [{"vid": "CZ000116.v1", "status": "active", "s": 1999, "e": null, "abbr": "LŽPL", "name": "A BETTER LIFE FOR PEOPLE – abolish the property tax, set the minimum wage at 50,000 CZK, set the minimum pension at 30,000 CZK, return energy prices to 2019 levels, ensure stores carry the highest-quality goods at prices everyone can afford, STOP the war", "a": {}}], "former": [], "reg": "116", "ideo": "Far-right"}, {"i": 37, "eid": "CZ000109", "abbr": "KSČ", "name": "Communist Party of Czechoslovakia", "native": "Komunistická strana Československa", "status": "active", "act": 1995, "lr": 1995, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "KSČ", "name": "Communist Party of Czechoslovakia", "s": 1995, "e": null}], "vers": [{"vid": "CZ000109.v1", "status": "active", "s": 1995, "e": null, "abbr": "KSČ", "name": "Communist Party of Czechoslovakia", "a": {}}], "former": [], "reg": "109", "ideo": "Far-left"}, {"i": 38, "eid": "CZ000359", "abbr": "ČSSD", "name": "ČSSD – Czech Sovereignity of Social Democracy", "native": "ČSSD – Česká suverenita sociální demokracie", "status": "active", "act": 2011, "lr": 2011, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "ČSSD", "name": "ČSSD – Czech Sovereignity of Social Democracy", "s": 2023, "e": null}], "vers": [{"vid": "CZ000359.v1", "status": "active", "s": 2011, "e": null, "abbr": "ČSSD", "name": "ČSSD – Czech Sovereignity of Social Democracy", "a": {}}], "former": [], "reg": "359", "ideo": "Left-wing"}, {"i": 39, "eid": "CZ000518", "abbr": "TEAM", "name": "\"WE ARE A TEAM\"", "native": "„JSME TEAM“", "status": "active", "act": 2018, "lr": 2018, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "TEAM", "name": "\"WE ARE A TEAM\"", "s": 2026, "e": null}], "vers": [{"vid": "CZ000518.v1", "status": "active", "s": 2018, "e": null, "abbr": "TEAM", "name": "\"WE ARE A TEAM\"", "a": {}}], "former": [], "reg": "518", "ideo": "Liberalism"}, {"i": 40, "eid": "CZ000598", "abbr": "Volt", "name": "Volt Czechia", "native": "Volt Česko", "status": "active", "act": 2022, "lr": 2022, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["Volt"], "f": 2022, "t": null, "v": 0}]}, "cur": {"europarty": ["Volt"]}, "want": {}, "names": [{"abbr": "Volt", "name": "Volt Czechia", "s": 2022, "e": null}], "vers": [{"vid": "CZ000598.v1", "status": "active", "s": 2022, "e": null, "abbr": "Volt", "name": "Volt Czechia", "a": {"europarty": ["Volt"]}}], "former": [], "reg": "598", "ideo": "Eurofederalism"}, {"i": 41, "eid": "CZ000242", "abbr": "ČSNS", "name": "Czech National Socialist Party", "native": "Česká strana národně sociální", "status": "active", "act": 1897, "lr": 1897, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "ČSNS", "name": "Czech National Socialist Party", "s": 1992, "e": null}], "vers": [{"vid": "CZ000242.v1", "status": "active", "s": 1897, "e": null, "abbr": "ČSNS", "name": "Czech National Socialist Party", "a": {}}], "former": [], "reg": "242", "ideo": "Centre-left"}, {"i": 42, "eid": "CZ000611", "abbr": "OK", "name": "Personalities for the region", "native": "Osobnosti pro kraj", "status": "active", "act": 2024, "lr": 2024, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "OK", "name": "Personalities for the region", "s": 2024, "e": null}], "vers": [{"vid": "CZ000611.v1", "status": "active", "s": 2024, "e": null, "abbr": "OK", "name": "Personalities for the region", "a": {}}], "former": [], "reg": "611", "ideo": "Regionalism"}, {"i": 43, "eid": "CZ000400", "abbr": "NMFM", "name": "Our City F-M", "native": "Naše Město F-M", "status": "active", "act": 2013, "lr": 2013, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "NMFM", "name": "Our City F-M", "s": 2013, "e": null}], "vers": [{"vid": "CZ000400.v1", "status": "active", "s": 2013, "e": null, "abbr": "NMFM", "name": "Our City F-M", "a": {}}], "former": [], "reg": "400", "ideo": "Regionalism"}, {"i": 44, "eid": "CZ000674", "abbr": "24/7", "name": "24/7", "native": "24/7", "status": "active", "act": 2026, "lr": 2026, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "24/7", "name": "24/7", "s": 2026, "e": null}], "vers": [{"vid": "CZ000674.v1", "status": "active", "s": 2026, "e": null, "abbr": "24/7", "name": "24/7", "a": {}}], "former": [], "reg": "674", "ideo": "Regionalism"}];
+const UNDATED = [];
+const pct = y => ((Math.max(y,Y0) - Y0)/(Y1 - Y0))*100;
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let dim = DIMS[0].id, sortBy="start", filt="all";
+const D = () => DIMS.find(d=>d.id===dim);
+const ivs = r => r.aff[dim] || [];
+const cur = r => r.cur[dim] || [];
+const col = k => (D().keys[k]||["#8a7f99",k])[0];
+const fill = list => list.length===1 ? col(list[0]) :
+  `repeating-linear-gradient(135deg,${list.map((k,i)=>`${col(k)} ${i*6}px ${(i+1)*6}px`).join(",")})`;
+
+// one lane interval [s,e) painted grey, with affiliation intervals layered on top (later versions win)
+function pieces(s,e,r,isAct){
+  const base = isAct ? "var(--line)" : "var(--bar)";
+  const over = ivs(r).map(v=>({k:v.k,f:Math.max(v.f??s,s),t:Math.min(v.t!=null?v.t+1:e,e),v:v.v,u:v.u,f0:v.f??s,t0:v.t!=null?v.t+1:NOW})).filter(v=>v.t>v.f);
+  const cuts = [...new Set([s,e,...over.flatMap(v=>[v.f,v.t])])].filter(x=>x>=s&&x<=e).sort((a,b)=>a-b);
+  const out=[];
+  for(let n=0;n<cuts.length-1;n++){
+    const a=cuts[n], b=cuts[n+1], m=(a+b)/2;
+    let hit=null; over.forEach(v=>{ if(v.f<=m && m<v.t && (!hit || v.v>=hit.v)) hit=v; });
+    const bg = hit ? fill(hit.k) : base, fg = hit ? col(hit.k[0]) : base, key = hit ? hit.k.join("+")+(hit.u?"|u"+hit.v:"") : "";
+    const prev = out[out.length-1];
+    if(prev && prev.key===key) prev.b=b; else out.push({a,b,bg,fg,key,hit});
+  }
+  // unknown start: fade in from grey across the membership span, reaching full colour at its end
+  out.forEach(p=>{ if(p.hit && p.hit.u){
+    const span = Math.max(p.hit.t0 - p.hit.f0, 0.5), c = col(p.hit.k[0]);
+    const q = x => Math.round(12 + 88*Math.min(1,Math.max(0,(x - p.hit.f0)/span)));
+    p.bg = `linear-gradient(90deg,color-mix(in srgb,${c} ${q(p.a)}%,${base}),color-mix(in srgb,${c} ${q(p.b)}%,${base}))`;
+  }});
+  return out;
+}
+function seg(s,end,r,isAct,cls=""){
+  if(s==null) return "";
+  const open = end==null, e = open ? NOW : Math.max(end+1, s+0.25);
+  const ps = pieces(Math.max(s,Y0),e,r,isAct);
+  return ps.map((p,k)=>`<div class="seg-bar${cls}${open&&k===ps.length-1?' open':''}" style="left:${pct(p.a)}%;width:${pct(p.b)-pct(p.a)}%;background:${p.bg};color:${p.fg}"></div>`).join("");
+}
+function nameLane(r){
+  return r.names.map((n,i)=>{
+    const nx = r.names[i+1];
+    const end = n.e ?? (nx ? nx.s-1 : null);
+    return seg(n.s, end!=null && end<n.s ? n.s : end, r, false, i>0?" join":"");
+  }).join("");
+}
+function actEnd(r){ return r.ld ?? (r.status==="inactive" ? r.nd : null); }
+// one bar: thin while active but not (yet) a legal entity, thick from legal registration to deregistration
+function mainBar(r){
+  const end = actEnd(r), s0 = r.act ?? r.lr ?? (r.names[0]||{}).s;
+  if(s0==null) return "";
+  if(r.lr==null) return `<div class="lane l-thin">${seg(s0,end,r,false)}</div>`;
+  let h = "";
+  if(s0 < r.lr) h += `<div class="lane l-thin">${seg(s0,r.lr-1,r,false)}</div>`;
+  h += `<div class="lane l-main">${seg(r.lr,end,r,false,end!=null?" closed":"")}</div>`;
+  return h;
+}
+
+function rowHTML(r){
+  const chips = [], c = cur(r);
+  if(c.length) chips.push(`<span class="chip intl" title="${esc(D().full)} (current)">${esc(c.join(" + "))}</span>`);
+  else if(ivs(r).length) chips.push(`<span class="chip">formerly ${esc([...new Set(ivs(r).flatMap(v=>v.k))].join(", "))}</span>`);
+  if(r.status!=="active") chips.push(`<span class="chip off">${esc(r.status||"no status")}</span>`);
+  if(r.vers.length>1) chips.push(`<span class="chip" title="Versions in the historical record">${r.vers.length} versions</span>`);
+  const first = Math.min(...[r.act,r.lr,...r.names.map(n=>n.s)].filter(v=>v!=null));
+  const marks = r.names.slice(1).map(n=>n.s).filter(y=>y!=null).map(y=>`<i class="vmark" style="left:${pct(y)}%" title="Name change ${y}"></i>`).join("");
+  const former = [...new Set(r.former)].filter(a=>a&&a!==r.abbr);
+  return `<div class="row" tabindex="0" data-i="${r.i}">
+    <div class="who"><div class="top"><span class="abbr">${esc(r.abbr||"—")}</span>${chips.join("")}</div><span class="name">${esc(r.name)}${former.length?` <span class="was">· formerly ${esc(former.join(", "))}</span>`:""}</span></div>
+    <div class="lanes">
+      ${isFinite(first)?`<span class="yr" style="left:${pct(first)}%">${first}</span>`:""}
+      ${mainBar(r)}
+      ${marks}
+    </div></div>`;
+}
+
+function legend(){
+  const d = D(), used = new Set();
+  rows.concat(UNDATED).forEach(r=>ivs(r).forEach(v=>v.k.forEach(k=>used.add(k))));
+  const keys = Object.keys(d.keys).filter(k=>used.has(k));
+  [...used].filter(k=>!d.keys[k]).forEach(k=>keys.push(k));
+  document.getElementById("legend").innerHTML =
+    `<span><span class="k-thin"></span>Active</span>
+     <span><span class="k-thick"></span>Registered legal entity</span>
+     <span><span class="vkey"></span>Name change</span>
+     <span><span class="k-fade"></span>Start year not recorded (fades in)</span>
+     <span><span class="sw" style="background:var(--bar)"></span>No ${esc(d.label)} affiliation / no data</span>` +
+    keys.map(k=>`<span><span class="sw" style="background:${col(k)}"></span>${esc(k)} <span style="opacity:.75">· ${esc((d.keys[k]||[0,"other"])[1])}</span></span>`).join("");
+  const all=rows.concat(UNDATED), nv=all.reduce((s,r)=>s+r.vers.length,0);
+  document.getElementById("stats").innerHTML = `<span><b>${all.length}</b> parties</span><span><b>${nv}</b> record versions</span><span><b>${all.filter(r=>r.status==="active").length}</b> active</span><span><b>${all.filter(r=>cur(r).length).length}</b> currently in ${esc(d.label)}</span>`;
+}
+
+function render(){
+  let list = rows.slice();
+  if(filt==="active") list = list.filter(r=>r.status==="active");
+  if(filt==="ended") list = list.filter(r=>r.status!=="active");
+  if(filt==="aff") list = list.filter(r=>ivs(r).length);
+  const order = Object.keys(D().keys);
+  const ok = r => { const k=cur(r)[0] || (ivs(r).length?ivs(r)[ivs(r).length-1].k[0]:null); if(!k) return 999; const i=order.indexOf(k); return (i<0?500:i) + (cur(r).length?0:0.5); };
+  const fst = r => Math.min(r.act??9999,r.lr??9999,...r.names.map(n=>n.s??9999));
+  list.sort((a,b)=>{
+    if(sortBy==="abbr") return (a.abbr||"").localeCompare(b.abbr||"");
+    if(sortBy==="aff"){const d=ok(a)-ok(b); if(d) return d;}
+    return fst(a)-fst(b) || (a.abbr||"").localeCompare(b.abbr||"");
+  });
+  let ticks="", lines="";
+  for(let y=Math.ceil(Y0/STEP)*STEP;y<=2025;y+=STEP){ticks+=`<span class="tick" style="left:${pct(y)}%">${y}</span>`;lines+=`<i style="left:${pct(y)}%"></i>`;}
+  let html = `<div class="axis"><span class="lab">Party</span><div class="track">${ticks}</div></div>
+    <div class="rows"><div class="gridlines">${lines}<i style="left:${pct(NOW)}%;border-left:1px dashed var(--line)"></i></div>${list.map(rowHTML).join("")}</div>`;
+  if(!list.length) html += `<div class="undated" style="color:var(--muted)">No parties match this filter.</div>`;
+  const und = UNDATED.filter(u=> filt==="all" || (filt==="active"&&u.status==="active") || (filt==="ended"&&u.status!=="active") || (filt==="aff"&&ivs(u).length));
+  if(und.length){
+    html += `<div class="sec-head">No dates recorded (${und.length})</div><div class="undated">${und.map(u=>{const c=cur(u);return `<span class="chip" title="${esc(u.native)}"><b>${esc(u.abbr||"—")}</b> · ${esc(u.name)}${c.length?` · ${esc(c.join(" + "))}`:""}</span>`}).join("")}</div>`;
+  }
+  document.getElementById("grid").innerHTML = html;
+}
+
+const dimEl = document.getElementById("dim");
+dimEl.innerHTML = DIMS.map((d,i)=>`<button type="button" id="d-${d.id}" aria-pressed="${i===0}" data-v="${d.id}" title="${esc(d.full)}">${esc(d.label)}</button>`).join("");
+function wire(id,setter){
+  document.getElementById(id).addEventListener("click",e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    document.querySelectorAll(`#${id} button`).forEach(x=>x.setAttribute("aria-pressed",x===b));
+    setter(b.dataset.v); legend(); render();
+  });
+}
+wire("dim",v=>dim=v); wire("sort",v=>sortBy=v); wire("filt",v=>filt=v);
+
+const tip=document.getElementById("tip");
+const fmt=v=>v==null?"—":v;
+function show(r,x,y){
+  const hist = r.vers.map(v=>{
+    const a = v.a[dim]; const span = `${fmt(v.s)}–${v.e??"now"}`;
+    return `<span class="k d">${esc(v.vid.split(".").pop())} ${span}</span>${esc(v.abbr)} · ${esc(v.status)}${a?` · ${esc(a.join(" + "))}`:""}<br>`;
+  }).join("");
+  const dl = DIMS.map(d=>{const c=r.cur[d.id]; return c?`${esc(d.label)} ${esc(c.join(" + "))}`:""}).filter(Boolean).join(" · ");
+  tip.innerHTML = `<b>${esc(r.abbr||"—")} · ${esc(r.name)}</b><br><span style="opacity:.75">${esc(r.native)}</span><br><br>
+  <span class="k">Activity started</span><span class="d">${fmt(r.act)}</span><br>
+  <span class="k">Legal entity</span><span class="d">${fmt(r.lr)} → ${r.ld??(r.lr?"present":"—")}</span><br>
+  ${r.names.map(n=>`<span class="k">Name</span><span class="d">${fmt(n.s)} → ${n.e??"…"}</span> ${esc(n.abbr)}<br>`).join("")}
+  <span class="k">Current</span>${dl?dl:"no affiliations"}<br>
+  ${ivs(r).map(v=>`<span class="k">${esc(D().label)}</span>${esc(v.k.join(" + "))} ${v.u?`start not recorded (drawn from ${v.f})`:`from ${v.f}`}${v.t!=null?` until ${v.t}`:""}<br>`).join("")}
+  <span class="k">Legal ID</span>${esc(r.reg||"—")} · <span class="k" style="min-width:0">Ideology</span> ${esc(r.ideo||"—")}<br>
+  ${r.vers.length>1?`<br><b style="font-size:12px">Record history · ${esc(D().label)}</b><br>${hist}`:""}`;
+  tip.hidden=false;
+  const w=tip.offsetWidth,h=tip.offsetHeight;
+  let L=x+14,T=y+14;
+  if(L+w>innerWidth-8) L=x-w-14; if(T+h>innerHeight-8) T=y-h-14;
+  tip.style.left=Math.max(8,L)+"px"; tip.style.top=Math.max(8,T)+"px";
+}
+const byI = new Map(rows.map(r=>[r.i,r]));
+const grid=document.getElementById("grid");
+grid.addEventListener("mousemove",e=>{const row=e.target.closest(".row"); if(!row){tip.hidden=true;return;} show(byI.get(+row.dataset.i),e.clientX,e.clientY);});
+grid.addEventListener("mouseleave",()=>tip.hidden=true);
+grid.addEventListener("focusin",e=>{const row=e.target.closest(".row"); if(!row) return; const b=row.getBoundingClientRect(); show(byI.get(+row.dataset.i),b.left+60,b.bottom-6);});
+grid.addEventListener("focusout",()=>tip.hidden=true);
+legend(); render();
+</script>
+</body>
+</html>

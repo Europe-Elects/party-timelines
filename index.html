@@ -1,0 +1,332 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>European Party Timelines</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: index of country ledgers — search + responsive card grid, Europarty mix strip per country */
+:root{--bg:#eef1f7;--surface:#fff;--fg:#0c1b3a;--muted:#4d5a75;--rule:#d5dbe8;--bar:#9aa1ad;--link:#003399;--navy:#003399;--yellow:#ffcc00;--edge:transparent;--ep-epp:#3399FF;--ep-pes:#FF0000;--ep-alde:#FFD700;--ep-edp:#fa8c00;--ep-egp:#009900;--ep-efa:#008080;--ep-volt:#502379;--ep-ela:#fb1d79;--ep-pel:#990000;--ep-diem25:#990000;--ep-ecr:#0000FF;--ep-ecpp:#a16585;--ep-eca:#a16585;--ep-patriots-eu:#000000;--ep-esn:#70463A;--ep-apf:#70463A;--ep-ppeu:#9c36b8;--ep-animal-politics-eu:#009076;
+  --display:"Advent Pro","Arial Narrow",system-ui,sans-serif;--body:"Advent Pro","Arial Narrow",system-ui,sans-serif;--mono:"Advent Pro","Arial Narrow",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#08122b;--surface:#0f1d3f;--fg:#eaf0ff;--muted:#a3b0cf;--rule:#22325c;--bar:#6c7482;--link:#ffd84d;--navy:#0a2a7a;--yellow:#ffcc00;--edge:rgba(255,255,255,.45);--ep-epp:#3399FF;--ep-pes:#FF0000;--ep-alde:#FFD700;--ep-edp:#fa8c00;--ep-egp:#009900;--ep-efa:#008080;--ep-volt:#502379;--ep-ela:#fb1d79;--ep-pel:#990000;--ep-diem25:#990000;--ep-ecr:#0000FF;--ep-ecpp:#a16585;--ep-eca:#a16585;--ep-patriots-eu:#000000;--ep-esn:#70463A;--ep-apf:#70463A;--ep-ppeu:#9c36b8;--ep-animal-politics-eu:#009076;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#08122b;--surface:#0f1d3f;--fg:#eaf0ff;--muted:#a3b0cf;--rule:#22325c;--bar:#6c7482;--link:#ffd84d;--navy:#0a2a7a;--yellow:#ffcc00;--edge:rgba(255,255,255,.45);--ep-epp:#3399FF;--ep-pes:#FF0000;--ep-alde:#FFD700;--ep-edp:#fa8c00;--ep-egp:#009900;--ep-efa:#008080;--ep-volt:#502379;--ep-ela:#fb1d79;--ep-pel:#990000;--ep-diem25:#990000;--ep-ecr:#0000FF;--ep-ecpp:#a16585;--ep-eca:#a16585;--ep-patriots-eu:#000000;--ep-esn:#70463A;--ep-apf:#70463A;--ep-ppeu:#9c36b8;--ep-animal-politics-eu:#009076;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;font-weight:500;line-height:1.4}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.band{background:var(--navy);color:#fff;border-bottom:4px solid var(--yellow)}
+.band-in{max-width:1240px;margin:0 auto;padding-block:22px 26px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:8px}
+.band .lede{color:rgba(255,255,255,.82)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:22px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(32px,4.8vw,50px);line-height:1;margin:0;text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+.lede{color:var(--muted);max-width:68ch;margin:0}
+input{font:inherit;padding:8px 12px;border:1px solid var(--rule);border-bottom:3px solid var(--navy);border-radius:2px;background:var(--surface);color:var(--fg);width:100%;max-width:320px}
+input:focus-visible,.card:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:8px;border-radius:2px;display:inline-block}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{display:flex;flex-direction:column;gap:8px;padding:14px;background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--navy);border-radius:2px;color:var(--fg);text-decoration:none;min-width:0}
+.card:hover{border-top-color:var(--yellow)}
+.cn{font-family:var(--display);font-weight:700;font-size:21px;text-transform:uppercase;letter-spacing:.02em}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:14px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+.meta b{color:var(--fg);font-variant-numeric:tabular-nums;font-weight:600}
+.mix{display:flex;height:6px;border-radius:3px;overflow:hidden;gap:1px}
+.mix i{display:block;box-shadow:inset 0 0 0 1px var(--edge)}
+.sw{box-shadow:inset 0 0 0 1px var(--edge)}
+.empty{color:var(--muted)}
+</style>
+<header class="band"><div class="band-in">
+    <h1>European Party Timelines</h1>
+    <p class="lede">One timeline page per country, showing when each party began political activity, when it was registered or deregistered as a legal entity, and when it changed its name. The strip on each card shows how that country's parties currently split across Europarties; grey is no Europarty or no data yet; the database is still being completed.</p>
+  </div></header>
+<div class="wrap">
+  <label for="q" style="display:flex;flex-direction:column;gap:6px;font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Find a country<input id="q" type="search" placeholder="e.g. Serbia" autocomplete="off"></label>
+  <div class="legend"><span><span class="sw" style="background:var(--ep-epp)"></span>EPP</span><span><span class="sw" style="background:var(--ep-pes)"></span>PES</span><span><span class="sw" style="background:var(--ep-alde)"></span>ALDE</span><span><span class="sw" style="background:var(--ep-edp)"></span>EDP</span><span><span class="sw" style="background:var(--ep-egp)"></span>EGP</span><span><span class="sw" style="background:var(--ep-efa)"></span>EFA</span><span><span class="sw" style="background:var(--ep-volt)"></span>Volt</span><span><span class="sw" style="background:var(--ep-ela)"></span>ELA</span><span><span class="sw" style="background:var(--ep-pel)"></span>PEL</span><span><span class="sw" style="background:var(--ep-diem25)"></span>DiEM25</span><span><span class="sw" style="background:var(--ep-ecr)"></span>ECR</span><span><span class="sw" style="background:var(--ep-ecpp)"></span>ECPP</span><span><span class="sw" style="background:var(--ep-eca)"></span>ECA</span><span><span class="sw" style="background:var(--ep-patriots-eu)"></span>Patriots.eu</span><span><span class="sw" style="background:var(--ep-esn)"></span>ESN</span><span><span class="sw" style="background:var(--ep-apf)"></span>APF</span><span><span class="sw" style="background:var(--ep-ppeu)"></span>PPEU</span><span><span class="sw" style="background:var(--ep-animal-politics-eu)"></span>Animal Politics EU</span><span><span class="sw" style="background:var(--bar)"></span>None / no data</span></div>
+  <div class="cards" id="cards">
+<a class="card" href="aland-islands.html" data-name="åland islands">
+  <span class="cn">Åland Islands</span>
+  <span class="meta"><span><b>8</b> parties</span><span><b>8</b> active</span><span><b>2</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-efa)" title="EFA: 1"></i><i style="flex:6;background:var(--bar)" title="No Europarty: 6"></i></span>
+</a>
+<a class="card" href="albania.html" data-name="albania">
+  <span class="cn">Albania</span>
+  <span class="meta"><span><b>41</b> parties</span><span><b>40</b> active</span><span><b>4</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:37;background:var(--bar)" title="No Europarty: 37"></i></span>
+</a>
+<a class="card" href="andorra.html" data-name="andorra">
+  <span class="cn">Andorra</span>
+  <span class="meta"><span><b>11</b> parties</span><span><b>11</b> active</span><span><b>4</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:7;background:var(--bar)" title="No Europarty: 7"></i></span>
+</a>
+<a class="card" href="armenia.html" data-name="armenia">
+  <span class="cn">Armenia</span>
+  <span class="meta"><span><b>30</b> parties</span><span><b>29</b> active</span><span><b>4</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:26;background:var(--bar)" title="No Europarty: 26"></i></span>
+</a>
+<a class="card" href="austria.html" data-name="austria">
+  <span class="cn">Austria</span>
+  <span class="meta"><span><b>10</b> parties</span><span><b>8</b> active</span><span><b>6</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:4;background:var(--bar)" title="No Europarty: 4"></i></span>
+</a>
+<a class="card" href="azerbaijan.html" data-name="azerbaijan">
+  <span class="cn">Azerbaijan</span>
+  <span class="meta"><span><b>4</b> parties</span><span><b>4</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:4;background:var(--bar)" title="No Europarty: 4"></i></span>
+</a>
+<a class="card" href="belarus.html" data-name="belarus">
+  <span class="cn">Belarus</span>
+  <span class="meta"><span><b>20</b> parties</span><span><b>5</b> active</span><span><b>7</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:13;background:var(--bar)" title="No Europarty: 13"></i></span>
+</a>
+<a class="card" href="belgium.html" data-name="belgium">
+  <span class="cn">Belgium</span>
+  <span class="meta"><span><b>18</b> parties</span><span><b>17</b> active</span><span><b>12</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:2;background:var(--ep-egp)" title="EGP: 2"></i><i style="flex:1;background:var(--ep-efa)" title="EFA: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:6;background:var(--bar)" title="No Europarty: 6"></i></span>
+</a>
+<a class="card" href="bosnia-and-herzegovina.html" data-name="bosnia and herzegovina">
+  <span class="cn">Bosnia and Herzegovina</span>
+  <span class="meta"><span><b>36</b> parties</span><span><b>36</b> active</span><span><b>6</b> Europarty</span></span>
+  <span class="mix"><i style="flex:4;background:var(--ep-epp)" title="EPP: 4"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:30;background:var(--bar)" title="No Europarty: 30"></i></span>
+</a>
+<a class="card" href="bulgaria.html" data-name="bulgaria">
+  <span class="cn">Bulgaria</span>
+  <span class="meta"><span><b>39</b> parties</span><span><b>36</b> active</span><span><b>11</b> Europarty</span></span>
+  <span class="mix"><i style="flex:4;background:var(--ep-epp)" title="EPP: 4"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:28;background:var(--bar)" title="No Europarty: 28"></i></span>
+</a>
+<a class="card" href="croatia.html" data-name="croatia">
+  <span class="cn">Croatia</span>
+  <span class="meta"><span><b>55</b> parties</span><span><b>52</b> active</span><span><b>17</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:6;background:var(--ep-alde)" title="ALDE: 6"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:4;background:var(--ep-ecr)" title="ECR: 4"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:38;background:var(--bar)" title="No Europarty: 38"></i></span>
+</a>
+<a class="card" href="cyprus.html" data-name="cyprus">
+  <span class="cn">Cyprus</span>
+  <span class="meta"><span><b>22</b> parties</span><span><b>17</b> active</span><span><b>10</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:2;background:var(--ep-edp)" title="EDP: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-animal-politics-eu)" title="Animal Politics EU: 1"></i><i style="flex:12;background:var(--bar)" title="No Europarty: 12"></i></span>
+</a>
+<a class="card" href="czechia.html" data-name="czechia">
+  <span class="cn">Czechia</span>
+  <span class="meta"><span><b>45</b> parties</span><span><b>43</b> active</span><span><b>14</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:2;background:var(--ep-pel)" title="PEL: 2"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:2;background:var(--ep-patriots-eu)" title="Patriots.eu: 2"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:1;background:var(--ep-ppeu)" title="PPEU: 1"></i><i style="flex:31;background:var(--bar)" title="No Europarty: 31"></i></span>
+</a>
+<a class="card" href="denmark.html" data-name="denmark">
+  <span class="cn">Denmark</span>
+  <span class="meta"><span><b>17</b> parties</span><span><b>15</b> active</span><span><b>10</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:3;background:var(--ep-alde)" title="ALDE: 3"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:7;background:var(--bar)" title="No Europarty: 7"></i></span>
+</a>
+<a class="card" href="estonia.html" data-name="estonia">
+  <span class="cn">Estonia</span>
+  <span class="meta"><span><b>12</b> parties</span><span><b>12</b> active</span><span><b>6</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:6;background:var(--bar)" title="No Europarty: 6"></i></span>
+</a>
+<a class="card" href="european-union.html" data-name="european union">
+  <span class="cn">European Union</span>
+  <span class="meta"><span><b>23</b> parties</span><span><b>23</b> active</span><span><b>18</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-efa)" title="EFA: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-diem25)" title="DiEM25: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:1;background:var(--ep-eca)" title="ECA: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:1;background:var(--ep-apf)" title="APF: 1"></i><i style="flex:1;background:var(--ep-ppeu)" title="PPEU: 1"></i><i style="flex:1;background:var(--ep-animal-politics-eu)" title="Animal Politics EU: 1"></i><i style="flex:5;background:var(--bar)" title="No Europarty: 5"></i></span>
+</a>
+<a class="card" href="faroe-islands.html" data-name="faroe islands">
+  <span class="cn">Faroe Islands</span>
+  <span class="meta"><span><b>7</b> parties</span><span><b>7</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:7;background:var(--bar)" title="No Europarty: 7"></i></span>
+</a>
+<a class="card" href="finland.html" data-name="finland">
+  <span class="cn">Finland</span>
+  <span class="meta"><span><b>9</b> parties</span><span><b>9</b> active</span><span><b>8</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--bar)" title="No Europarty: 1"></i></span>
+</a>
+<a class="card" href="france.html" data-name="france">
+  <span class="cn">France</span>
+  <span class="meta"><span><b>88</b> parties</span><span><b>85</b> active</span><span><b>20</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:4;background:var(--ep-efa)" title="EFA: 4"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:4;background:var(--ep-pel)" title="PEL: 4"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:1;background:var(--ep-animal-politics-eu)" title="Animal Politics EU: 1"></i><i style="flex:68;background:var(--bar)" title="No Europarty: 68"></i></span>
+</a>
+<a class="card" href="georgia.html" data-name="georgia">
+  <span class="cn">Georgia</span>
+  <span class="meta"><span><b>29</b> parties</span><span><b>28</b> active</span><span><b>8</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:5;background:var(--ep-alde)" title="ALDE: 5"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:21;background:var(--bar)" title="No Europarty: 21"></i></span>
+</a>
+<a class="card" href="germany.html" data-name="germany">
+  <span class="cn">Germany</span>
+  <span class="meta"><span><b>21</b> parties</span><span><b>21</b> active</span><span><b>17</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:2;background:var(--ep-edp)" title="EDP: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-efa)" title="EFA: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:2;background:var(--ep-ecr)" title="ECR: 2"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:1;background:var(--ep-apf)" title="APF: 1"></i><i style="flex:1;background:var(--ep-ppeu)" title="PPEU: 1"></i><i style="flex:1;background:var(--ep-animal-politics-eu)" title="Animal Politics EU: 1"></i><i style="flex:4;background:var(--bar)" title="No Europarty: 4"></i></span>
+</a>
+<a class="card" href="greece.html" data-name="greece">
+  <span class="cn">Greece</span>
+  <span class="meta"><span><b>31</b> parties</span><span><b>24</b> active</span><span><b>11</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:2;background:var(--ep-pel)" title="PEL: 2"></i><i style="flex:1;background:var(--ep-diem25)" title="DiEM25: 1"></i><i style="flex:1;background:var(--ep-eca)" title="ECA: 1"></i><i style="flex:2;background:var(--ep-patriots-eu)" title="Patriots.eu: 2"></i><i style="flex:1;background:var(--ep-apf)" title="APF: 1"></i><i style="flex:20;background:var(--bar)" title="No Europarty: 20"></i></span>
+</a>
+<a class="card" href="greenland.html" data-name="greenland">
+  <span class="cn">Greenland</span>
+  <span class="meta"><span><b>7</b> parties</span><span><b>7</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:7;background:var(--bar)" title="No Europarty: 7"></i></span>
+</a>
+<a class="card" href="guernsey.html" data-name="guernsey">
+  <span class="cn">Guernsey</span>
+  <span class="meta"><span><b>1</b> parties</span><span><b>1</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--bar)" title="No Europarty: 1"></i></span>
+</a>
+<a class="card" href="hungary.html" data-name="hungary">
+  <span class="cn">Hungary</span>
+  <span class="meta"><span><b>22</b> parties</span><span><b>20</b> active</span><span><b>9</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:1;background:var(--ep-ppeu)" title="PPEU: 1"></i><i style="flex:13;background:var(--bar)" title="No Europarty: 13"></i></span>
+</a>
+<a class="card" href="iceland.html" data-name="iceland">
+  <span class="cn">Iceland</span>
+  <span class="meta"><span><b>9</b> parties</span><span><b>9</b> active</span><span><b>5</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-ppeu)" title="PPEU: 1"></i><i style="flex:4;background:var(--bar)" title="No Europarty: 4"></i></span>
+</a>
+<a class="card" href="ireland.html" data-name="ireland">
+  <span class="cn">Ireland</span>
+  <span class="meta"><span><b>14</b> parties</span><span><b>14</b> active</span><span><b>5</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:9;background:var(--bar)" title="No Europarty: 9"></i></span>
+</a>
+<a class="card" href="isle-of-man.html" data-name="isle of man">
+  <span class="cn">Isle of Man</span>
+  <span class="meta"><span><b>2</b> parties</span><span><b>2</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--bar)" title="No Europarty: 2"></i></span>
+</a>
+<a class="card" href="italy.html" data-name="italy">
+  <span class="cn">Italy</span>
+  <span class="meta"><span><b>71</b> parties</span><span><b>66</b> active</span><span><b>23</b> Europarty</span></span>
+  <span class="mix"><i style="flex:6;background:var(--ep-epp)" title="EPP: 6"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:4;background:var(--ep-alde)" title="ALDE: 4"></i><i style="flex:2;background:var(--ep-edp)" title="EDP: 2"></i><i style="flex:1;background:var(--ep-efa)" title="EFA: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:3;background:var(--ep-pel)" title="PEL: 3"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:1;background:var(--ep-animal-politics-eu)" title="Animal Politics EU: 1"></i><i style="flex:48;background:var(--bar)" title="No Europarty: 48"></i></span>
+</a>
+<a class="card" href="jersey.html" data-name="jersey">
+  <span class="cn">Jersey</span>
+  <span class="meta"><span><b>1</b> parties</span><span><b>1</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--bar)" title="No Europarty: 1"></i></span>
+</a>
+<a class="card" href="kosovo.html" data-name="kosovo">
+  <span class="cn">Kosovo</span>
+  <span class="meta"><span><b>22</b> parties</span><span><b>22</b> active</span><span><b>3</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:19;background:var(--bar)" title="No Europarty: 19"></i></span>
+</a>
+<a class="card" href="latvia.html" data-name="latvia">
+  <span class="cn">Latvia</span>
+  <span class="meta"><span><b>38</b> parties</span><span><b>38</b> active</span><span><b>8</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:30;background:var(--bar)" title="No Europarty: 30"></i></span>
+</a>
+<a class="card" href="liechtenstein.html" data-name="liechtenstein">
+  <span class="cn">Liechtenstein</span>
+  <span class="meta"><span><b>6</b> parties</span><span><b>6</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:6;background:var(--bar)" title="No Europarty: 6"></i></span>
+</a>
+<a class="card" href="lithuania.html" data-name="lithuania">
+  <span class="cn">Lithuania</span>
+  <span class="meta"><span><b>19</b> parties</span><span><b>19</b> active</span><span><b>10</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:2;background:var(--ep-ecr)" title="ECR: 2"></i><i style="flex:2;background:var(--ep-ecpp)" title="ECPP: 2"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:9;background:var(--bar)" title="No Europarty: 9"></i></span>
+</a>
+<a class="card" href="luxembourg.html" data-name="luxembourg">
+  <span class="cn">Luxembourg</span>
+  <span class="meta"><span><b>12</b> parties</span><span><b>12</b> active</span><span><b>8</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-ppeu)" title="PPEU: 1"></i><i style="flex:4;background:var(--bar)" title="No Europarty: 4"></i></span>
+</a>
+<a class="card" href="malta.html" data-name="malta">
+  <span class="cn">Malta</span>
+  <span class="meta"><span><b>7</b> parties</span><span><b>6</b> active</span><span><b>4</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:3;background:var(--bar)" title="No Europarty: 3"></i></span>
+</a>
+<a class="card" href="moldova.html" data-name="moldova">
+  <span class="cn">Moldova</span>
+  <span class="meta"><span><b>32</b> parties</span><span><b>30</b> active</span><span><b>7</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:25;background:var(--bar)" title="No Europarty: 25"></i></span>
+</a>
+<a class="card" href="monaco.html" data-name="monaco">
+  <span class="cn">Monaco</span>
+  <span class="meta"><span><b>6</b> parties</span><span><b>3</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:6;background:var(--bar)" title="No Europarty: 6"></i></span>
+</a>
+<a class="card" href="montenegro.html" data-name="montenegro">
+  <span class="cn">Montenegro</span>
+  <span class="meta"><span><b>32</b> parties</span><span><b>31</b> active</span><span><b>6</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:26;background:var(--bar)" title="No Europarty: 26"></i></span>
+</a>
+<a class="card" href="netherlands.html" data-name="netherlands">
+  <span class="cn">Netherlands</span>
+  <span class="meta"><span><b>22</b> parties</span><span><b>20</b> active</span><span><b>13</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-volt)" title="Volt: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:2;background:var(--ep-ecpp)" title="ECPP: 2"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:1;background:var(--ep-animal-politics-eu)" title="Animal Politics EU: 1"></i><i style="flex:9;background:var(--bar)" title="No Europarty: 9"></i></span>
+</a>
+<a class="card" href="north-macedonia.html" data-name="north macedonia">
+  <span class="cn">North Macedonia</span>
+  <span class="meta"><span><b>25</b> parties</span><span><b>22</b> active</span><span><b>4</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:21;background:var(--bar)" title="No Europarty: 21"></i></span>
+</a>
+<a class="card" href="norway.html" data-name="norway">
+  <span class="cn">Norway</span>
+  <span class="meta"><span><b>12</b> parties</span><span><b>12</b> active</span><span><b>6</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:6;background:var(--bar)" title="No Europarty: 6"></i></span>
+</a>
+<a class="card" href="poland.html" data-name="poland">
+  <span class="cn">Poland</span>
+  <span class="meta"><span><b>34</b> parties</span><span><b>28</b> active</span><span><b>10</b> Europarty</span></span>
+  <span class="mix"><i style="flex:3;background:var(--ep-epp)" title="EPP: 3"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:24;background:var(--bar)" title="No Europarty: 24"></i></span>
+</a>
+<a class="card" href="portugal.html" data-name="portugal">
+  <span class="cn">Portugal</span>
+  <span class="meta"><span><b>13</b> parties</span><span><b>13</b> active</span><span><b>10</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:2;background:var(--ep-egp)" title="EGP: 2"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:1;background:var(--ep-animal-politics-eu)" title="Animal Politics EU: 1"></i><i style="flex:3;background:var(--bar)" title="No Europarty: 3"></i></span>
+</a>
+<a class="card" href="romania.html" data-name="romania">
+  <span class="cn">Romania</span>
+  <span class="meta"><span><b>54</b> parties</span><span><b>52</b> active</span><span><b>14</b> Europarty</span></span>
+  <span class="mix"><i style="flex:3;background:var(--ep-epp)" title="EPP: 3"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-efa)" title="EFA: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:2;background:var(--ep-ecr)" title="ECR: 2"></i><i style="flex:3;background:var(--ep-ecpp)" title="ECPP: 3"></i><i style="flex:40;background:var(--bar)" title="No Europarty: 40"></i></span>
+</a>
+<a class="card" href="russian-federation.html" data-name="russian federation">
+  <span class="cn">Russian Federation</span>
+  <span class="meta"><span><b>20</b> parties</span><span><b>18</b> active</span><span><b>0</b> Europarty</span></span>
+  <span class="mix"><i style="flex:20;background:var(--bar)" title="No Europarty: 20"></i></span>
+</a>
+<a class="card" href="san-marino.html" data-name="san marino">
+  <span class="cn">San Marino</span>
+  <span class="meta"><span><b>9</b> parties</span><span><b>9</b> active</span><span><b>4</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-edp)" title="EDP: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:5;background:var(--bar)" title="No Europarty: 5"></i></span>
+</a>
+<a class="card" href="serbia.html" data-name="serbia">
+  <span class="cn">Serbia</span>
+  <span class="meta"><span><b>74</b> parties</span><span><b>68</b> active</span><span><b>7</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-efa)" title="EFA: 1"></i><i style="flex:67;background:var(--bar)" title="No Europarty: 67"></i></span>
+</a>
+<a class="card" href="slovakia.html" data-name="slovakia">
+  <span class="cn">Slovakia</span>
+  <span class="meta"><span><b>22</b> parties</span><span><b>21</b> active</span><span><b>9</b> Europarty</span></span>
+  <span class="mix"><i style="flex:4;background:var(--ep-epp)" title="EPP: 4"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:1;background:var(--ep-esn)" title="ESN: 1"></i><i style="flex:1;background:var(--ep-apf)" title="APF: 1"></i><i style="flex:13;background:var(--bar)" title="No Europarty: 13"></i></span>
+</a>
+<a class="card" href="slovenia.html" data-name="slovenia">
+  <span class="cn">Slovenia</span>
+  <span class="meta"><span><b>20</b> parties</span><span><b>16</b> active</span><span><b>10</b> Europarty</span></span>
+  <span class="mix"><i style="flex:3;background:var(--ep-epp)" title="EPP: 3"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:2;background:var(--ep-edp)" title="EDP: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ppeu)" title="PPEU: 1"></i><i style="flex:10;background:var(--bar)" title="No Europarty: 10"></i></span>
+</a>
+<a class="card" href="spain.html" data-name="spain">
+  <span class="cn">Spain</span>
+  <span class="meta"><span><b>71</b> parties</span><span><b>69</b> active</span><span><b>18</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:1;background:var(--ep-alde)" title="ALDE: 1"></i><i style="flex:3;background:var(--ep-edp)" title="EDP: 3"></i><i style="flex:2;background:var(--ep-egp)" title="EGP: 2"></i><i style="flex:5;background:var(--ep-efa)" title="EFA: 5"></i><i style="flex:2;background:var(--ep-ela)" title="ELA: 2"></i><i style="flex:2;background:var(--ep-pel)" title="PEL: 2"></i><i style="flex:1;background:var(--ep-patriots-eu)" title="Patriots.eu: 1"></i><i style="flex:53;background:var(--bar)" title="No Europarty: 53"></i></span>
+</a>
+<a class="card" href="sweden.html" data-name="sweden">
+  <span class="cn">Sweden</span>
+  <span class="meta"><span><b>10</b> parties</span><span><b>9</b> active</span><span><b>9</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-epp)" title="EPP: 2"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:1;background:var(--ep-ela)" title="ELA: 1"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ecr)" title="ECR: 1"></i><i style="flex:1;background:var(--bar)" title="No Europarty: 1"></i></span>
+</a>
+<a class="card" href="switzerland.html" data-name="switzerland">
+  <span class="cn">Switzerland</span>
+  <span class="meta"><span><b>32</b> parties</span><span><b>31</b> active</span><span><b>8</b> Europarty</span></span>
+  <span class="mix"><i style="flex:1;background:var(--ep-epp)" title="EPP: 1"></i><i style="flex:1;background:var(--ep-pes)" title="PES: 1"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:2;background:var(--ep-egp)" title="EGP: 2"></i><i style="flex:1;background:var(--ep-pel)" title="PEL: 1"></i><i style="flex:1;background:var(--ep-ecpp)" title="ECPP: 1"></i><i style="flex:24;background:var(--bar)" title="No Europarty: 24"></i></span>
+</a>
+<a class="card" href="turkey.html" data-name="turkey">
+  <span class="cn">Turkey</span>
+  <span class="meta"><span><b>22</b> parties</span><span><b>21</b> active</span><span><b>4</b> Europarty</span></span>
+  <span class="mix"><i style="flex:4;background:var(--ep-pes)" title="PES: 4"></i><i style="flex:18;background:var(--bar)" title="No Europarty: 18"></i></span>
+</a>
+<a class="card" href="ukraine.html" data-name="ukraine">
+  <span class="cn">Ukraine</span>
+  <span class="meta"><span><b>27</b> parties</span><span><b>23</b> active</span><span><b>8</b> Europarty</span></span>
+  <span class="mix"><i style="flex:4;background:var(--ep-epp)" title="EPP: 4"></i><i style="flex:3;background:var(--ep-alde)" title="ALDE: 3"></i><i style="flex:1;background:var(--ep-egp)" title="EGP: 1"></i><i style="flex:19;background:var(--bar)" title="No Europarty: 19"></i></span>
+</a>
+<a class="card" href="united-kingdom.html" data-name="united kingdom">
+  <span class="cn">United Kingdom</span>
+  <span class="meta"><span><b>24</b> parties</span><span><b>22</b> active</span><span><b>8</b> Europarty</span></span>
+  <span class="mix"><i style="flex:2;background:var(--ep-pes)" title="PES: 2"></i><i style="flex:2;background:var(--ep-alde)" title="ALDE: 2"></i><i style="flex:2;background:var(--ep-egp)" title="EGP: 2"></i><i style="flex:2;background:var(--ep-efa)" title="EFA: 2"></i><i style="flex:16;background:var(--bar)" title="No Europarty: 16"></i></span>
+</a>
+  </div>
+  <p class="empty" id="none" hidden>No country matches that search.</p>
+</div>
+<script>
+const q=document.getElementById("q"),cards=[...document.querySelectorAll(".card")],none=document.getElementById("none");
+q.addEventListener("input",()=>{const v=q.value.trim().toLowerCase();let n=0;cards.forEach(c=>{const m=!v||c.dataset.name.includes(v);c.hidden=!m;n+=m});none.hidden=n>0});
+</script>
+
+</body></html>

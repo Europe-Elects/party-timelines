@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Austria Party Timeline</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: register-style ledger — label column + shared year track, three lanes per party */
+:root{
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eef1f7; --surface:#ffffff; --fg:#0c1b3a; --muted:#4d5a75; --rule:#d5dbe8; --grid:#e8ecf4; --navy:#003399; --navy-ink:#ffffff; --yellow:#ffcc00;
+  --bar:#9aa1ad; --bar-soft:#c6cbd4; --line:#7b8391; --chip:#e9eef8; --link:#003399; --edge:transparent;
+
+  --display:"Advent Pro","Arial Narrow",system-ui,sans-serif;
+  --body:"Advent Pro","Arial Narrow",system-ui,sans-serif;
+  --mono:"Advent Pro","Arial Narrow",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#08122b; --surface:#0f1d3f; --fg:#eaf0ff; --muted:#a3b0cf; --rule:#22325c; --grid:#18274d; --navy:#0a2a7a; --navy-ink:#ffffff; --yellow:#ffcc00;
+  --bar:#6c7482; --bar-soft:#3f4651; --line:#8a92a0; --chip:#1a2a52; --link:#ffd84d; --edge:rgba(255,255,255,.45);
+
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#08122b; --surface:#0f1d3f; --fg:#eaf0ff; --muted:#a3b0cf; --rule:#22325c; --grid:#18274d; --navy:#0a2a7a; --navy-ink:#ffffff; --yellow:#ffcc00;
+  --bar:#6c7482; --bar-soft:#3f4651; --line:#8a92a0; --chip:#1a2a52; --link:#ffd84d; --edge:rgba(255,255,255,.45);
+
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;font-weight:500;line-height:1.4}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.band{background:var(--navy);color:var(--navy-ink);border-bottom:4px solid var(--yellow)}
+.band-in{max-width:1240px;margin:0 auto;padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:6px}
+.band a{color:var(--yellow);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+.band a:hover{text-decoration:underline}
+.band h1{color:var(--navy-ink)}
+.band .lede{color:rgba(255,255,255,.82)}
+.band .stats{color:rgba(255,255,255,.75)}
+.band .stats b{color:var(--yellow)}
+a{color:var(--link)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:22px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.crumb{font-size:13px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,46px);line-height:1;margin:0;text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}
+.lede{color:var(--muted);max-width:68ch;margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stats b{color:var(--fg);font-variant-numeric:tabular-nums}
+.controls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:2px;overflow:hidden;background:var(--surface)}
+.seg button{font:600 14px var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:none;border:0;padding:6px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink);box-shadow:inset 0 -3px 0 var(--yellow)}
+.seg button:focus-visible,.row:focus-visible,a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.ctl-label{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:18px;height:8px;border-radius:2px;display:inline-block}
+.lane-key{display:inline-flex;flex-direction:column;gap:2px;width:22px}
+.legend .lane-key{flex-direction:column;align-items:stretch;gap:2px}
+.lane-key i{display:block;width:22px;border-radius:1px}
+.board{background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--navy);border-radius:2px;overflow-x:auto}
+.grid{min-width:1100px;position:relative}
+.axis,.row{display:grid;grid-template-columns:270px 1fr;align-items:center}
+.axis{background:var(--surface);border-bottom:1px solid var(--rule);height:34px}
+.axis .lab{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-left:14px}
+.track{position:relative;height:100%;margin-right:18px}
+.tick{position:absolute;top:0;bottom:0;font:600 13px var(--mono);color:var(--muted);transform:translateX(-50%);display:flex;align-items:center}
+.rows{position:relative}
+.gridlines{position:absolute;inset:0 18px 0 270px;pointer-events:none}
+.gridlines i{position:absolute;top:0;bottom:0;border-left:1px solid var(--grid)}
+.row{border-bottom:1px solid var(--grid);min-height:46px;position:relative}
+.row:hover,.row:focus-visible{background:var(--chip)}
+.who{padding:7px 10px 7px 14px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.who .top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.abbr{font:700 16px var(--display);letter-spacing:.02em;overflow-wrap:anywhere}
+.name{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{font:700 11.5px var(--body);letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:3px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.chip.intl{color:var(--navy-ink);background:var(--navy)}
+.chip.off{font-style:italic}
+.chip.want{border:1px dashed var(--line);background:none}
+.lanes{position:relative;height:30px;margin-right:18px}
+.lane{position:absolute;left:0;right:0}
+.l-act{top:4px;height:2px}.l-leg{top:10px;height:7px}.l-nam{top:20px;height:7px}
+.seg-bar{position:absolute;top:0;bottom:0;border-radius:2px;min-width:3px;box-shadow:inset 0 0 0 1px var(--edge)}
+.sw{box-shadow:inset 0 0 0 1px var(--edge)}
+.l-act .seg-bar{border-radius:0}
+.open::after{content:"";position:absolute;right:-5px;top:50%;transform:translateY(-50%);border-left:5px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.l-act .open::after{border-left-width:4px;border-top-width:3px;border-bottom-width:3px;right:-4px}
+.yr{position:absolute;font:600 12px var(--mono);color:var(--muted);top:50%;transform:translate(-100%,-50%);padding-right:6px;white-space:nowrap}
+.sec-head{font:700 13px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:14px 14px 6px;border-top:1px solid var(--rule);background:var(--bg)}
+.undated{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px}
+.undated .chip{font-size:13px;text-transform:none;letter-spacing:.01em;padding:3px 8px;white-space:normal}
+#tip{position:fixed;z-index:20;max-width:340px;background:var(--navy);color:var(--navy-ink);border-top:3px solid var(--yellow);padding:10px 12px;border-radius:2px;font-size:14px;line-height:1.5;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+#tip b{font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+#tip .k{opacity:.7;display:inline-block;min-width:104px}
+#tip .d{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.foot{color:var(--muted);font-size:14px;max-width:80ch;margin:0}
+@media (max-width:600px){.axis,.row{grid-template-columns:170px 1fr}.gridlines{left:170px}.grid{min-width:950px}.name{font-size:13px}}
+.lanes{height:18px}
+.row{min-height:40px}
+.l-main{top:5px;height:8px}
+.l-thin{top:8px;height:2px}
+.l-thin .seg-bar{border-radius:0;box-shadow:none}
+.l-thin .open::after{border-left-width:4px;border-top-width:3px;border-bottom-width:3px;right:-4px}
+.closed{border-top-right-radius:0;border-bottom-right-radius:0}
+.closed::before{content:"";position:absolute;right:-1px;top:-3px;bottom:-3px;width:2px;background:currentColor}
+.vmark{position:absolute;top:1px;bottom:1px;width:2px;margin-left:-1px;background:var(--fg);border-radius:1px;box-shadow:0 0 0 1px var(--surface)}
+.k-fade{display:inline-block;width:28px;height:8px;border-radius:2px;background:linear-gradient(90deg,var(--bar),var(--fg))}
+.k-thin{display:inline-block;width:20px;height:2px;background:var(--bar)}
+.k-thick{display:inline-block;width:20px;height:8px;border-radius:2px;background:var(--bar)}
+.vkey{display:inline-block;width:2px;height:14px;background:var(--fg);opacity:.75;border-radius:1px}
+.join{border-left:2px solid var(--surface)}
+.was{opacity:.8;font-style:italic}
+#tip{max-width:400px}
+</style>
+</head>
+<body>
+<header class="band"><div class="band-in">
+    <a class="crumb" href="./">← All countries</a>
+    <h1>Austria</h1>
+    <p class="lede">Each bar starts when a party began political activity. It is thin until the party registered as a legal entity, thick while registered, and stops at deregistration; ticks mark name changes. Bars stay grey where the party has no recorded affiliation (or no data yet), then take that affiliation's colour for the years of membership.</p>
+    <div class="stats" id="stats"></div>
+  </div></header>
+<div class="wrap">
+
+  <div class="controls">
+    <div><span class="ctl-label">Colour by</span><span class="seg" id="dim"></span></div>
+  </div>
+  <div class="controls">
+    <div><span class="ctl-label">Sort</span><span class="seg" id="sort">
+      <button type="button" id="s-start" aria-pressed="true" data-v="start">First activity</button>
+      <button type="button" id="s-abbr" aria-pressed="false" data-v="abbr">Abbreviation</button>
+      <button type="button" id="s-aff" aria-pressed="false" data-v="aff">Affiliation</button>
+    </span></div>
+    <div><span class="ctl-label">Show</span><span class="seg" id="filt">
+      <button type="button" id="f-all" aria-pressed="true" data-v="all">All</button>
+      <button type="button" id="f-active" aria-pressed="false" data-v="active">Active</button>
+      <button type="button" id="f-ended" aria-pressed="false" data-v="ended">Inactive</button>
+      <button type="button" id="f-aff" aria-pressed="false" data-v="aff">With affiliation</button>
+    </span></div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="board"><div class="grid" id="grid"></div></div>
+
+  <p class="foot">Arrows mark parties still active, drawn to October 2026; a square end marks deregistration. Year-only dates start at the beginning of that year; end years are drawn through the end of the year. Each row is one organisation: all versions sharing an entity ID are drawn together, with a tick at each name change; affiliation changes show as a change of colour. The tag beside each abbreviation shows the current affiliation. Parties with two affiliations are striped. The database is still being completed, so grey can also mean missing data, and where a membership's start year is not recorded the colour fades in from grey instead of starting at a fixed date. Membership colour never starts before the affiliation (or its earliest predecessor) was founded; Europarty colour starts no earlier than 2004, when Regulation 2004/2003 gave European political parties formal status. Colours follow the Political Party Database family palette (Poguntke et al., 2025). Hover or focus a row for the full record.</p>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const NOW = 2026 + 9.75/12, Y0 = 1875, Y1 = 2027, STEP = 25;
+const DIMS = [{"id": "europarty", "label": "Europarty", "full": "Europarty affiliation", "keys": {"EPP": ["#3399FF", "European People's Party"], "PES": ["#FF0000", "Party of European Socialists"], "ALDE": ["#FFD700", "ALDE Party"], "EDP": ["#fa8c00", "European Democratic Party"], "EGP": ["#009900", "European Green Party"], "EFA": ["#008080", "European Free Alliance"], "Volt": ["#502379", "Volt Europa"], "ELA": ["#fb1d79", "European Left Alliance for the People and the Planet"], "PEL": ["#990000", "Party of the European Left"], "DiEM25": ["#990000", "DiEM25 (left-wing family colour)"], "ECL": ["#7c0000", "European Communist Action"], "ECR": ["#0000FF", "European Conservatives and Reformists Party"], "ECPP": ["#a16585", "European Christian Political Party"], "ECA": ["#a16585", "European Christian Alliance (Christian family colour)"], "Patriots.eu": ["#000000", "Patriots.eu"], "ESN": ["#70463A", "Europe of Sovereign Nations"], "APF": ["#70463A", "Alliance for Peace and Freedom (far-right family colour)"], "PPEU": ["#9c36b8", "European Pirate Party"], "Animal Politics EU": ["#009076", "Animal Politics EU"]}}, {"id": "ep", "label": "EP group", "full": "European Parliament group", "keys": {"EPP": ["#3399FF", "Group of the European People's Party"], "S&D": ["#FF0000", "Socialists & Democrats"], "RE": ["#FFD700", "Renew Europe"], "Greens/EFA": ["#009900", "Greens/European Free Alliance"], "LEFT": ["#990000", "The Left"], "ECR": ["#0000FF", "European Conservatives and Reformists"], "PfE": ["#000000", "Patriots for Europe"], "ESN": ["#70463A", "Europe of Sovereign Nations"], "NI": ["#8a7f99", "Non-attached members"]}}, {"id": "pace", "label": "PACE", "full": "Parliamentary Assembly of the Council of Europe group", "keys": {"EPP/CD": ["#3399FF", "EPP/Christian Democrats"], "SOC": ["#FF0000", "Socialists, Democrats and Greens"], "ALDE": ["#FFD700", "Alliance of Liberals and Democrats for Europe"], "UEL": ["#990000", "Group of the Unified European Left"], "ECPA": ["#0000FF", "European Conservatives, Patriots & Affiliates"], "NR": ["#8a7f99", "Not registered in a group"]}}, {"id": "intl", "label": "International", "full": "International party federation", "keys": {"CDI": ["#3399FF", "Centrist Democrat International"], "SI": ["#FF0000", "Socialist International"], "PA": ["#FF0000", "Progressive Alliance"], "LI": ["#FFD700", "Liberal International"], "GG": ["#009900", "Global Greens"], "PI": ["#fb1d79", "Progressive International"], "IMCWP": ["#7c0000", "International Meeting of Communist and Workers' Parties"], "PftAIM": ["#7c0000", "Platform for the Anti-Imperialist Movement"], "WAP": ["#7c0000", "World Anti-imperialist Platform"], "IDU": ["#0000FF", "International Democracy Union"], "PPI": ["#9c36b8", "Pirate Parties International"], "IALP": ["#F2C300", "International Alliance of Libertarian Parties"]}}, {"id": "clara", "label": "CLRA", "full": "Congress of Local and Regional Authorities group", "keys": {"EPP": ["#3399FF", "European People's Party Group"], "SGPD": ["#FF0000", "Socialists, Greens and Progressive Democrats"], "ILDG": ["#FFD700", "Independent Liberal and Democratic Group"], "ECR": ["#0000FF", "European Conservatives and Reformists"], "PfE": ["#000000", "Patriots for Europe"], "NI": ["#8a7f99", "Non-attached"]}}];
+const rows = [{"i": 0, "eid": "AT188001", "abbr": "SPÖ", "name": "Social Democratic Party of Austria (SPÖ)", "native": "Sozialdemokratische Partei Österreichs (SPÖ)", "status": "active", "act": 1889, "lr": 1975, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["PES"], "f": 2004, "t": null, "v": 0, "u": 1}], "ep": [{"k": ["S&D"], "f": 1953, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["SOC"], "f": 1964, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["SI", "PA"], "f": 1951, "t": null, "v": 0, "u": 1}], "clara": [{"k": ["SGPD"], "f": 1957, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["PES"], "ep": ["S&D"], "pace": ["SOC"], "intl": ["SI", "PA"], "clara": ["SGPD"]}, "want": {}, "names": [{"abbr": "SPÖ", "name": "Social Democratic Party of Austria (SPÖ)", "s": 1975, "e": null}], "vers": [{"vid": "AT188001.v1", "status": "active", "s": 1889, "e": null, "abbr": "SPÖ", "name": "Social Democratic Party of Austria (SPÖ)", "a": {"europarty": ["PES"], "ep": ["S&D"], "pace": ["SOC"], "intl": ["SI", "PA"], "clara": ["SGPD"]}}], "former": [], "reg": "500,002", "ideo": "Centre-left"}, {"i": 1, "eid": "AT191001", "abbr": "KPÖ", "name": "Communist Party of Austria (KPÖ)", "native": "Kommunistische Partei Österreichs (KPÖ)", "status": "active", "act": 1918, "lr": 1976, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["PEL"], "f": 2004, "t": null, "v": 0}]}, "cur": {"europarty": ["PEL"]}, "want": {}, "names": [{"abbr": "KPÖ", "name": "Communist Party of Austria (KPÖ)", "s": 1976, "e": null}], "vers": [{"vid": "AT191001.v1", "status": "active", "s": 1918, "e": null, "abbr": "KPÖ", "name": "Communist Party of Austria (KPÖ)", "a": {"europarty": ["PEL"]}}], "former": [], "reg": "500,029", "ideo": "Left-wing"}, {"i": 2, "eid": "AT194001", "abbr": "ÖVP", "name": "Austrian People's Party (ÖVP)", "native": "Österreichische Volkspartei (ÖVP)", "status": "active", "act": 1945, "lr": 1975, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["EPP"], "f": 2004, "t": null, "v": 0}], "ep": [{"k": ["EPP"], "f": 1953, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["EPP/CD"], "f": 1964, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["IDU"], "f": 1983, "t": null, "v": 0, "u": 1}], "clara": [{"k": ["EPP"], "f": 1957, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["EPP"], "ep": ["EPP"], "pace": ["EPP/CD"], "intl": ["IDU"], "clara": ["EPP"]}, "want": {}, "names": [{"abbr": "ÖVP", "name": "Austrian People's Party (ÖVP)", "s": 1975, "e": null}], "vers": [{"vid": "AT194001.v1", "status": "active", "s": 1945, "e": null, "abbr": "ÖVP", "name": "Austrian People's Party (ÖVP)", "a": {"europarty": ["EPP"], "ep": ["EPP"], "pace": ["EPP/CD"], "intl": ["IDU"], "clara": ["EPP"]}}], "former": [], "reg": "500,004", "ideo": "Centre-right"}, {"i": 3, "eid": "AT195001", "abbr": "FPÖ", "name": "Freedom Party of Austria (FPÖ) - The Freedom Party", "native": "Freiheitliche Partei Österreichs (FPÖ) - Die Freiheitlichen", "status": "active", "act": 1956, "lr": 1977, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["Patriots.eu"], "f": 2014, "t": null, "v": 0}], "ep": [{"k": ["PfE"], "f": 2015, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["ECPA"], "f": 1970, "t": null, "v": 0, "u": 1}], "clara": [{"k": ["PfE"], "f": 1957, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["Patriots.eu"], "ep": ["PfE"], "pace": ["ECPA"], "clara": ["PfE"]}, "want": {}, "names": [{"abbr": "FPÖ", "name": "Freedom Party of Austria (FPÖ) - The Freedom Party", "s": 1977, "e": null}], "vers": [{"vid": "AT195001.v1", "status": "active", "s": 1956, "e": null, "abbr": "FPÖ", "name": "Freedom Party of Austria (FPÖ) - The Freedom Party", "a": {"europarty": ["Patriots.eu"], "ep": ["PfE"], "pace": ["ECPA"], "clara": ["PfE"]}}], "former": [], "reg": "500,008", "ideo": "Right-wing"}, {"i": 4, "eid": "AT198001", "abbr": "GRÜNE", "name": "THE GREENS - THE GREEN ALTERNATIVE (GREENS)", "native": "DIE GRÜNEN - DIE GRÜNE ALTERNATIVE (GRÜNE)", "status": "active", "act": 1986, "lr": 1986, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["EGP"], "f": 2004, "t": null, "v": 0}], "ep": [{"k": ["Greens/EFA"], "f": 1986, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["SOC"], "f": 1986, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["GG"], "f": 2001, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["EGP"], "ep": ["Greens/EFA"], "pace": ["SOC"], "intl": ["GG"]}, "want": {}, "names": [{"abbr": "GRÜNE", "name": "THE GREENS - THE GREEN ALTERNATIVE (GREENS)", "s": 1986, "e": null}], "vers": [{"vid": "AT198001.v1", "status": "active", "s": 1986, "e": null, "abbr": "GRÜNE", "name": "THE GREENS - THE GREEN ALTERNATIVE (GREENS)", "a": {"europarty": ["EGP"], "ep": ["Greens/EFA"], "pace": ["SOC"], "intl": ["GG"]}}], "former": [], "reg": "500,106", "ideo": "Green politics"}, {"i": 5, "eid": "AT201201", "abbr": "NEOS", "name": "NEOS - The New Austria and Liberal Forum", "native": "NEOS - Das Neue Österreich und Liberales Forum", "status": "active", "act": 2012, "lr": 2012, "ld": null, "nd": null, "aff": {"europarty": [{"k": ["ALDE"], "f": 2014, "t": null, "v": 0}], "ep": [{"k": ["RE"], "f": 2012, "t": null, "v": 0, "u": 1}], "pace": [{"k": ["ALDE"], "f": 2012, "t": null, "v": 0, "u": 1}], "intl": [{"k": ["LI"], "f": 2012, "t": null, "v": 0, "u": 1}]}, "cur": {"europarty": ["ALDE"], "ep": ["RE"], "pace": ["ALDE"], "intl": ["LI"]}, "want": {}, "names": [{"abbr": "NEOS", "name": "NEOS - The New Austria and Liberal Forum", "s": 2012, "e": null}], "vers": [{"vid": "AT201201.v1", "status": "active", "s": 2012, "e": null, "abbr": "NEOS", "name": "NEOS - The New Austria and Liberal Forum", "a": {"europarty": ["ALDE"], "ep": ["RE"], "pace": ["ALDE"], "intl": ["LI"]}}], "former": [], "reg": "500,940", "ideo": "Liberalism"}, {"i": 6, "eid": "AT201501", "abbr": "BIER", "name": "The Beer Party", "native": "Die Bierpartei", "status": "realigned", "act": 2015, "lr": 2015, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "BIER", "name": "The Beer Party", "s": 2015, "e": null}], "vers": [{"vid": "AT201501.v1", "status": "realigned", "s": 2015, "e": null, "abbr": "BIER", "name": "The Beer Party", "a": {}}], "former": [], "reg": "501,040", "ideo": "Left-wing"}, {"i": 7, "eid": "AT201701", "abbr": "JETZT", "name": "NOW - List Pilz", "native": "JETZT - Liste Pilz", "status": "inactive", "act": 2017, "lr": 2017, "ld": 2020, "nd": 2020, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "JETZT", "name": "NOW - List Pilz", "s": 2017, "e": 2020}], "vers": [{"vid": "AT201701.v1", "status": "inactive", "s": 2017, "e": null, "abbr": "JETZT", "name": "NOW - List Pilz", "a": {}}], "former": [], "reg": "501,092", "ideo": "Green politics"}, {"i": 8, "eid": "AT201901", "abbr": "HC", "name": "Team HC Strache - Alliance for Austria", "native": "Team HC Strache - Allianz für Österreich", "status": "active", "act": 2019, "lr": 2019, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "HC", "name": "Team HC Strache - Alliance for Austria", "s": 2019, "e": null}], "vers": [{"vid": "AT201901.v1", "status": "active", "s": 2019, "e": null, "abbr": "HC", "name": "Team HC Strache - Alliance for Austria", "a": {}}], "former": [], "reg": "501,172", "ideo": "Right-wing"}, {"i": 9, "eid": "AT202001", "abbr": "MFG", "name": "MFG - Austria People - Freedom - Fundamental Rights", "native": "MFG - Österreich Menschen - Freiheit - Grundrechte", "status": "active", "act": 2021, "lr": 2021, "ld": null, "nd": null, "aff": {}, "cur": {}, "want": {}, "names": [{"abbr": "MFG", "name": "MFG - Austria People - Freedom - Fundamental Rights", "s": 2021, "e": null}], "vers": [{"vid": "AT202001.v1", "status": "active", "s": 2021, "e": null, "abbr": "MFG", "name": "MFG - Austria People - Freedom - Fundamental Rights", "a": {}}], "former": [], "reg": "501,219", "ideo": "Diverse"}];
+const UNDATED = [];
+const pct = y => ((Math.max(y,Y0) - Y0)/(Y1 - Y0))*100;
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let dim = DIMS[0].id, sortBy="start", filt="all";
+const D = () => DIMS.find(d=>d.id===dim);
+const ivs = r => r.aff[dim] || [];
+const cur = r => r.cur[dim] || [];
+const col = k => (D().keys[k]||["#8a7f99",k])[0];
+const fill = list => list.length===1 ? col(list[0]) :
+  `repeating-linear-gradient(135deg,${list.map((k,i)=>`${col(k)} ${i*6}px ${(i+1)*6}px`).join(",")})`;
+
+// one lane interval [s,e) painted grey, with affiliation intervals layered on top (later versions win)
+function pieces(s,e,r,isAct){
+  const base = isAct ? "var(--line)" : "var(--bar)";
+  const over = ivs(r).map(v=>({k:v.k,f:Math.max(v.f??s,s),t:Math.min(v.t!=null?v.t+1:e,e),v:v.v,u:v.u,f0:v.f??s,t0:v.t!=null?v.t+1:NOW})).filter(v=>v.t>v.f);
+  const cuts = [...new Set([s,e,...over.flatMap(v=>[v.f,v.t])])].filter(x=>x>=s&&x<=e).sort((a,b)=>a-b);
+  const out=[];
+  for(let n=0;n<cuts.length-1;n++){
+    const a=cuts[n], b=cuts[n+1], m=(a+b)/2;
+    let hit=null; over.forEach(v=>{ if(v.f<=m && m<v.t && (!hit || v.v>=hit.v)) hit=v; });
+    const bg = hit ? fill(hit.k) : base, fg = hit ? col(hit.k[0]) : base, key = hit ? hit.k.join("+")+(hit.u?"|u"+hit.v:"") : "";
+    const prev = out[out.length-1];
+    if(prev && prev.key===key) prev.b=b; else out.push({a,b,bg,fg,key,hit});
+  }
+  // unknown start: fade in from grey across the membership span, reaching full colour at its end
+  out.forEach(p=>{ if(p.hit && p.hit.u){
+    const span = Math.max(p.hit.t0 - p.hit.f0, 0.5), c = col(p.hit.k[0]);
+    const q = x => Math.round(12 + 88*Math.min(1,Math.max(0,(x - p.hit.f0)/span)));
+    p.bg = `linear-gradient(90deg,color-mix(in srgb,${c} ${q(p.a)}%,${base}),color-mix(in srgb,${c} ${q(p.b)}%,${base}))`;
+  }});
+  return out;
+}
+function seg(s,end,r,isAct,cls=""){
+  if(s==null) return "";
+  const open = end==null, e = open ? NOW : Math.max(end+1, s+0.25);
+  const ps = pieces(Math.max(s,Y0),e,r,isAct);
+  return ps.map((p,k)=>`<div class="seg-bar${cls}${open&&k===ps.length-1?' open':''}" style="left:${pct(p.a)}%;width:${pct(p.b)-pct(p.a)}%;background:${p.bg};color:${p.fg}"></div>`).join("");
+}
+function nameLane(r){
+  return r.names.map((n,i)=>{
+    const nx = r.names[i+1];
+    const end = n.e ?? (nx ? nx.s-1 : null);
+    return seg(n.s, end!=null && end<n.s ? n.s : end, r, false, i>0?" join":"");
+  }).join("");
+}
+function actEnd(r){ return r.ld ?? (r.status==="inactive" ? r.nd : null); }
+// one bar: thin while active but not (yet) a legal entity, thick from legal registration to deregistration
+function mainBar(r){
+  const end = actEnd(r), s0 = r.act ?? r.lr ?? (r.names[0]||{}).s;
+  if(s0==null) return "";
+  if(r.lr==null) return `<div class="lane l-thin">${seg(s0,end,r,false)}</div>`;
+  let h = "";
+  if(s0 < r.lr) h += `<div class="lane l-thin">${seg(s0,r.lr-1,r,false)}</div>`;
+  h += `<div class="lane l-main">${seg(r.lr,end,r,false,end!=null?" closed":"")}</div>`;
+  return h;
+}
+
+function rowHTML(r){
+  const chips = [], c = cur(r);
+  if(c.length) chips.push(`<span class="chip intl" title="${esc(D().full)} (current)">${esc(c.join(" + "))}</span>`);
+  else if(ivs(r).length) chips.push(`<span class="chip">formerly ${esc([...new Set(ivs(r).flatMap(v=>v.k))].join(", "))}</span>`);
+  if(r.status!=="active") chips.push(`<span class="chip off">${esc(r.status||"no status")}</span>`);
+  if(r.vers.length>1) chips.push(`<span class="chip" title="Versions in the historical record">${r.vers.length} versions</span>`);
+  const first = Math.min(...[r.act,r.lr,...r.names.map(n=>n.s)].filter(v=>v!=null));
+  const marks = r.names.slice(1).map(n=>n.s).filter(y=>y!=null).map(y=>`<i class="vmark" style="left:${pct(y)}%" title="Name change ${y}"></i>`).join("");
+  const former = [...new Set(r.former)].filter(a=>a&&a!==r.abbr);
+  return `<div class="row" tabindex="0" data-i="${r.i}">
+    <div class="who"><div class="top"><span class="abbr">${esc(r.abbr||"—")}</span>${chips.join("")}</div><span class="name">${esc(r.name)}${former.length?` <span class="was">· formerly ${esc(former.join(", "))}</span>`:""}</span></div>
+    <div class="lanes">
+      ${isFinite(first)?`<span class="yr" style="left:${pct(first)}%">${first}</span>`:""}
+      ${mainBar(r)}
+      ${marks}
+    </div></div>`;
+}
+
+function legend(){
+  const d = D(), used = new Set();
+  rows.concat(UNDATED).forEach(r=>ivs(r).forEach(v=>v.k.forEach(k=>used.add(k))));
+  const keys = Object.keys(d.keys).filter(k=>used.has(k));
+  [...used].filter(k=>!d.keys[k]).forEach(k=>keys.push(k));
+  document.getElementById("legend").innerHTML =
+    `<span><span class="k-thin"></span>Active</span>
+     <span><span class="k-thick"></span>Registered legal entity</span>
+     <span><span class="vkey"></span>Name change</span>
+     <span><span class="k-fade"></span>Start year not recorded (fades in)</span>
+     <span><span class="sw" style="background:var(--bar)"></span>No ${esc(d.label)} affiliation / no data</span>` +
+    keys.map(k=>`<span><span class="sw" style="background:${col(k)}"></span>${esc(k)} <span style="opacity:.75">· ${esc((d.keys[k]||[0,"other"])[1])}</span></span>`).join("");
+  const all=rows.concat(UNDATED), nv=all.reduce((s,r)=>s+r.vers.length,0);
+  document.getElementById("stats").innerHTML = `<span><b>${all.length}</b> parties</span><span><b>${nv}</b> record versions</span><span><b>${all.filter(r=>r.status==="active").length}</b> active</span><span><b>${all.filter(r=>cur(r).length).length}</b> currently in ${esc(d.label)}</span>`;
+}
+
+function render(){
+  let list = rows.slice();
+  if(filt==="active") list = list.filter(r=>r.status==="active");
+  if(filt==="ended") list = list.filter(r=>r.status!=="active");
+  if(filt==="aff") list = list.filter(r=>ivs(r).length);
+  const order = Object.keys(D().keys);
+  const ok = r => { const k=cur(r)[0] || (ivs(r).length?ivs(r)[ivs(r).length-1].k[0]:null); if(!k) return 999; const i=order.indexOf(k); return (i<0?500:i) + (cur(r).length?0:0.5); };
+  const fst = r => Math.min(r.act??9999,r.lr??9999,...r.names.map(n=>n.s??9999));
+  list.sort((a,b)=>{
+    if(sortBy==="abbr") return (a.abbr||"").localeCompare(b.abbr||"");
+    if(sortBy==="aff"){const d=ok(a)-ok(b); if(d) return d;}
+    return fst(a)-fst(b) || (a.abbr||"").localeCompare(b.abbr||"");
+  });
+  let ticks="", lines="";
+  for(let y=Math.ceil(Y0/STEP)*STEP;y<=2025;y+=STEP){ticks+=`<span class="tick" style="left:${pct(y)}%">${y}</span>`;lines+=`<i style="left:${pct(y)}%"></i>`;}
+  let html = `<div class="axis"><span class="lab">Party</span><div class="track">${ticks}</div></div>
+    <div class="rows"><div class="gridlines">${lines}<i style="left:${pct(NOW)}%;border-left:1px dashed var(--line)"></i></div>${list.map(rowHTML).join("")}</div>`;
+  if(!list.length) html += `<div class="undated" style="color:var(--muted)">No parties match this filter.</div>`;
+  const und = UNDATED.filter(u=> filt==="all" || (filt==="active"&&u.status==="active") || (filt==="ended"&&u.status!=="active") || (filt==="aff"&&ivs(u).length));
+  if(und.length){
+    html += `<div class="sec-head">No dates recorded (${und.length})</div><div class="undated">${und.map(u=>{const c=cur(u);return `<span class="chip" title="${esc(u.native)}"><b>${esc(u.abbr||"—")}</b> · ${esc(u.name)}${c.length?` · ${esc(c.join(" + "))}`:""}</span>`}).join("")}</div>`;
+  }
+  document.getElementById("grid").innerHTML = html;
+}
+
+const dimEl = document.getElementById("dim");
+dimEl.innerHTML = DIMS.map((d,i)=>`<button type="button" id="d-${d.id}" aria-pressed="${i===0}" data-v="${d.id}" title="${esc(d.full)}">${esc(d.label)}</button>`).join("");
+function wire(id,setter){
+  document.getElementById(id).addEventListener("click",e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    document.querySelectorAll(`#${id} button`).forEach(x=>x.setAttribute("aria-pressed",x===b));
+    setter(b.dataset.v); legend(); render();
+  });
+}
+wire("dim",v=>dim=v); wire("sort",v=>sortBy=v); wire("filt",v=>filt=v);
+
+const tip=document.getElementById("tip");
+const fmt=v=>v==null?"—":v;
+function show(r,x,y){
+  const hist = r.vers.map(v=>{
+    const a = v.a[dim]; const span = `${fmt(v.s)}–${v.e??"now"}`;
+    return `<span class="k d">${esc(v.vid.split(".").pop())} ${span}</span>${esc(v.abbr)} · ${esc(v.status)}${a?` · ${esc(a.join(" + "))}`:""}<br>`;
+  }).join("");
+  const dl = DIMS.map(d=>{const c=r.cur[d.id]; return c?`${esc(d.label)} ${esc(c.join(" + "))}`:""}).filter(Boolean).join(" · ");
+  tip.innerHTML = `<b>${esc(r.abbr||"—")} · ${esc(r.name)}</b><br><span style="opacity:.75">${esc(r.native)}</span><br><br>
+  <span class="k">Activity started</span><span class="d">${fmt(r.act)}</span><br>
+  <span class="k">Legal entity</span><span class="d">${fmt(r.lr)} → ${r.ld??(r.lr?"present":"—")}</span><br>
+  ${r.names.map(n=>`<span class="k">Name</span><span class="d">${fmt(n.s)} → ${n.e??"…"}</span> ${esc(n.abbr)}<br>`).join("")}
+  <span class="k">Current</span>${dl?dl:"no affiliations"}<br>
+  ${ivs(r).map(v=>`<span class="k">${esc(D().label)}</span>${esc(v.k.join(" + "))} ${v.u?`start not recorded (drawn from ${v.f})`:`from ${v.f}`}${v.t!=null?` until ${v.t}`:""}<br>`).join("")}
+  <span class="k">Legal ID</span>${esc(r.reg||"—")} · <span class="k" style="min-width:0">Ideology</span> ${esc(r.ideo||"—")}<br>
+  ${r.vers.length>1?`<br><b style="font-size:12px">Record history · ${esc(D().label)}</b><br>${hist}`:""}`;
+  tip.hidden=false;
+  const w=tip.offsetWidth,h=tip.offsetHeight;
+  let L=x+14,T=y+14;
+  if(L+w>innerWidth-8) L=x-w-14; if(T+h>innerHeight-8) T=y-h-14;
+  tip.style.left=Math.max(8,L)+"px"; tip.style.top=Math.max(8,T)+"px";
+}
+const byI = new Map(rows.map(r=>[r.i,r]));
+const grid=document.getElementById("grid");
+grid.addEventListener("mousemove",e=>{const row=e.target.closest(".row"); if(!row){tip.hidden=true;return;} show(byI.get(+row.dataset.i),e.clientX,e.clientY);});
+grid.addEventListener("mouseleave",()=>tip.hidden=true);
+grid.addEventListener("focusin",e=>{const row=e.target.closest(".row"); if(!row) return; const b=row.getBoundingClientRect(); show(byI.get(+row.dataset.i),b.left+60,b.bottom-6);});
+grid.addEventListener("focusout",()=>tip.hidden=true);
+legend(); render();
+</script>
+</body>
+</html>
