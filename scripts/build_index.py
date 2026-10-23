@@ -24,7 +24,7 @@ for c in d['index']:
 
 legend = "".join(f'<span><span class="sw" style="background:var({EPS[k][0]})"></span>{H.escape(k)}</span>' for k in used)
 
-body = f'''<title>European Party Timelines</title>
+body = f'''<title>Party Affiliations Database</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;500;600;700;800&display=swap">
 <style>
