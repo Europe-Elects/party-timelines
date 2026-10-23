@@ -60,7 +60,6 @@ input:focus-visible,.card:focus-visible{{outline:2px solid var(--link);outline-o
 .wip b{{text-transform:uppercase;letter-spacing:.04em;color:var(--navy)}}
 </style>
 <header class="band"><div class="band-in">
-    <h1>European Party Timelines</h1>
     <p class="lede">One timeline page per country, showing when each party began political activity, when it was registered or deregistered as a legal entity, and when it changed its name. On the map, each dot is one party, coloured by its affiliation in the selected year; the strip on each card shows how that country's parties currently split across Europarties; grey is no Europarty or no data yet; the database is still being completed.</p>
     <p class="wip" role="note"><b>Work in progress.</b> Our database does not list every party yet, and some records are still incomplete. Counts, maps and timelines only show the parties recorded so far.</p>
   </div></header>
