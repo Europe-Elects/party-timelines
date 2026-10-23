@@ -151,7 +151,7 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,46px);l
 <div id="tip" hidden></div>
 
 <script>
-const NOW = 2026 + 9.75/12, Y0 = __Y0__, Y1 = 2027, STEP = __STEP__;
+const _d = new Date(), NOW = _d.getFullYear() + _d.getMonth()/12, Y0 = __Y0__, Y1 = _d.getFullYear() + 1, STEP = __STEP__;
 const DIMS = __DIMS__;
 const rows = __DATA__;
 const UNDATED = __UNDATED__;
