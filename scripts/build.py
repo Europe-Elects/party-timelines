@@ -116,6 +116,19 @@ FOUNDED = {
  "nordic": {}, "benelux": {}, "clara": {}, "cor": {}, "cis": {"UPC–CPSU":1993},
 }
 FLOOR = {"europarty":1974,"ep":1953,"pace":1949,"intl":1947,"nordic":1952,"benelux":1955,"clara":1957,"cor":1994,"cis":1991}
+# EP group membership is only possible while the country is in the EU (or its predecessors)
+EU_JOIN = {"Belgium":1952,"France":1952,"Germany":1952,"Italy":1952,"Luxembourg":1952,"Netherlands":1952,
+           "Denmark":1973,"Ireland":1973,"United Kingdom":1973,"Greenland":1973,"Greece":1981,"Portugal":1986,"Spain":1986,
+           "Austria":1995,"Finland":1995,"Sweden":1995,"Åland Islands":1995,
+           "Cyprus":2004,"Czechia":2004,"Estonia":2004,"Hungary":2004,"Latvia":2004,"Lithuania":2004,"Malta":2004,
+           "Poland":2004,"Slovakia":2004,"Slovenia":2004,"Bulgaria":2007,"Romania":2007,"Croatia":2013}
+EU_LEAVE = {"Greenland":1985,"United Kingdom":2020}
+EU_DROPPED = []
+def eu_window(country):
+    if country == "European Union": return (None, None)
+    if country not in EU_JOIN: return False
+    return (EU_JOIN[country], EU_LEAVE.get(country))
+
 def founded(dim, keys):
     ys = [FOUNDED[dim].get(k, FLOOR[dim]) for k in keys]
     y = min(ys) if ys else FLOOR[dim]
@@ -210,6 +223,12 @@ for country, rs in sorted(by_country.items(), key=lambda kv: kv[0].replace('Å',
                     # start unknown: no start year recorded and not a continuation of the same affiliation
                     unk = a['f'] is None and not (iv and iv[-1]['k'] == a['k'])
                     if f is None or f < fy: f = fy
+                    if d['id'] == 'ep':
+                        win = eu_window(country)
+                        if win is False:
+                            EU_DROPPED.append((country, v['r']['Abbreviation'].strip(), a['k'])); continue
+                        if win[0] is not None and f < win[0]: f = win[0]
+                        if win[1] is not None: t = win[1] if t is None else min(t, win[1])
                     if t is not None and t < f: continue
                     rec_ = dict(k=a['k'], f=f, t=t, v=n)
                     if unk: rec_['u'] = 1
@@ -265,11 +284,30 @@ for country, rs in sorted(by_country.items(), key=lambda kv: kv[0].replace('Å',
     fn = slug(country) + '.html'
     open(os.path.join(OUT, fn), 'w', encoding='utf-8').write(html)
     mix = collections.Counter(x['cur']['europarty'][0] for x in allr if x['cur'].get('europarty'))
+    # per-affiliation membership spans for the map: [key, from, to or None]
+    tl = {}
+    life = []
+    for pi, x in enumerate(allr):
+        s0 = min([y for y in [x['act'], x['lr']] + [nm['s'] for nm in x['names']] if y is not None] or [None]) if (x['act'] or x['lr'] or x['names']) else None
+        pend = x['ld'] if x['ld'] is not None else (x['nd'] if x['status'] == 'inactive' else None)
+        life.append([s0, pend])
+        for did, ivl in x['aff'].items():
+            for v in ivl:
+                f = v['f'] if v['f'] is not None else s0
+                if f is None: continue
+                if s0 is not None and f < s0: f = s0
+                t = v['t']
+                if pend is not None: t = pend if t is None else min(t, pend)
+                if t is not None and t < f: continue
+                for k in v['k']:
+                    tl.setdefault(did, []).append([k, f, t, pi])
     index.append(dict(country=country, file=fn, n=len(allr),
                       active=sum(x['status'] == 'active' for x in allr),
-                      mem=sum(mix.values()), mix=[[k, mix[k]] for k in DIMS[0]['keys'] if mix[k]]))
+                      mem=sum(mix.values()), mix=[[k, mix[k]] for k in DIMS[0]['keys'] if mix[k]], tl=tl, life=life))
 
 eps = {k: ["--ep-" + slug(k), v[1], v[0], v[0]] for k, v in DIMS[0]['keys'].items()}
-json.dump(dict(index=index, eps=eps), open(os.path.join(OUT, '_index.json'), 'w'), ensure_ascii=False)
+dims_all = [dict(id=d['id'], label=d['label'], full=d['full'], keys={k: list(v) for k, v in d['keys'].items()}) for d in DIMS]
+json.dump(dict(index=index, eps=eps, dims=dims_all), open(os.path.join(OUT, '_index.json'), 'w'), ensure_ascii=False)
 print(len(index), 'countries')
+for x in EU_DROPPED: print('EP group ignored (country not in the EU):', *x)
 for l in LINKS: print('linked', *l)

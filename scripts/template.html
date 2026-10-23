@@ -11,35 +11,25 @@
 :root{
   color-scheme:light;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#eef1f7; --surface:#ffffff; --fg:#0c1b3a; --muted:#4d5a75; --rule:#d5dbe8; --grid:#e8ecf4; --navy:#003399; --navy-ink:#ffffff; --yellow:#ffcc00;
-  --bar:#9aa1ad; --bar-soft:#c6cbd4; --line:#7b8391; --chip:#e9eef8; --link:#003399; --edge:transparent;
+  --bg:#f8f8f6; --surface:#ffffff; --fg:#14213d; --muted:#5b616e; --rule:#e3e3de; --grid:#efefea; --navy:#003399; --navy-ink:#ffffff; --yellow:#ffcc00;
+  --bar:#9aa1ad; --bar-soft:#c6cbd4; --line:#7b8391; --chip:#f0f0eb; --link:#003399; --edge:transparent;
 __EPLIGHT__
   --display:"Advent Pro","Arial Narrow",system-ui,sans-serif;
   --body:"Advent Pro","Arial Narrow",system-ui,sans-serif;
   --mono:"Advent Pro","Arial Narrow",system-ui,sans-serif;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#08122b; --surface:#0f1d3f; --fg:#eaf0ff; --muted:#a3b0cf; --rule:#22325c; --grid:#18274d; --navy:#0a2a7a; --navy-ink:#ffffff; --yellow:#ffcc00;
-  --bar:#6c7482; --bar-soft:#3f4651; --line:#8a92a0; --chip:#1a2a52; --link:#ffd84d; --edge:rgba(255,255,255,.45);
-__EPDARK__
-  color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#08122b; --surface:#0f1d3f; --fg:#eaf0ff; --muted:#a3b0cf; --rule:#22325c; --grid:#18274d; --navy:#0a2a7a; --navy-ink:#ffffff; --yellow:#ffcc00;
-  --bar:#6c7482; --bar-soft:#3f4651; --line:#8a92a0; --chip:#1a2a52; --link:#ffd84d; --edge:rgba(255,255,255,.45);
-__EPDARK__
-  color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;font-weight:500;line-height:1.4}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
-.band{background:var(--navy);color:var(--navy-ink);border-bottom:4px solid var(--yellow)}
+.band{background:transparent;color:var(--fg);border-bottom:1px solid var(--rule)}
 .band-in{max-width:1240px;margin:0 auto;padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:6px}
-.band a{color:var(--yellow);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+.band a{color:var(--navy);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
 .band a:hover{text-decoration:underline}
-.band h1{color:var(--navy-ink)}
-.band .lede{color:rgba(255,255,255,.82)}
-.band .stats{color:rgba(255,255,255,.75)}
-.band .stats b{color:var(--yellow)}
+.band h1{color:var(--navy)}
+.band h1::after{content:"";display:block;width:56px;height:4px;background:var(--yellow);margin-top:10px}
+.band .lede{color:var(--muted)}
+.band .stats{color:var(--muted)}
+.band .stats b{color:var(--navy)}
 a{color:var(--link)}
 .wrap{max-width:1240px;margin:0 auto;padding-block:22px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
 .crumb{font-size:13px}
@@ -114,6 +104,8 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,46px);l
 .join{border-left:2px solid var(--surface)}
 .was{opacity:.8;font-style:italic}
 #tip{max-width:400px}
+.wip{margin:4px 0 0;max-width:72ch;padding:10px 14px;background:#fff8d6;border-left:4px solid var(--yellow);color:var(--fg);font-size:15px;line-height:1.4;border-radius:2px}
+.wip b{text-transform:uppercase;letter-spacing:.04em;color:var(--navy)}
 </style>
 </head>
 <body>
@@ -122,6 +114,7 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,46px);l
     <h1>__COUNTRY__</h1>
     <p class="lede">Each bar starts when a party began political activity. It is thin until the party registered as a legal entity, thick while registered, and stops at deregistration; ticks mark name changes. Bars stay grey where the party has no recorded affiliation (or no data yet), then take that affiliation's colour for the years of membership.</p>
     <div class="stats" id="stats"></div>
+    <p class="wip" role="note"><b>Work in progress.</b> Our database does not list every party yet, and some records are still incomplete. Counts, maps and timelines only show the parties recorded so far.</p>
   </div></header>
 <div class="wrap">
 
@@ -146,7 +139,7 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.4vw,46px);l
 
   <div class="board"><div class="grid" id="grid"></div></div>
 
-  <p class="foot">Arrows mark parties still active, drawn to October 2026; a square end marks deregistration. Year-only dates start at the beginning of that year; end years are drawn through the end of the year. Each row is one organisation: all versions sharing an entity ID are drawn together, with a tick at each name change; affiliation changes show as a change of colour. The tag beside each abbreviation shows the current affiliation. Parties with two affiliations are striped. The database is still being completed, so grey can also mean missing data, and where a membership's start year is not recorded the colour fades in from grey instead of starting at a fixed date. Membership colour never starts before the affiliation (or its earliest predecessor) was founded; Europarty colour starts no earlier than 2004, when Regulation 2004/2003 gave European political parties formal status. Hover or focus a row for the full record.</p>
+  <p class="foot">Arrows mark parties still active, drawn to today; a square end marks deregistration. Year-only dates start at the beginning of that year; end years are drawn through the end of the year. Each row is one organisation: all versions sharing an entity ID are drawn together, with a tick at each name change; affiliation changes show as a change of colour. The tag beside each abbreviation shows the current affiliation. Parties with two affiliations are striped. The database is still being completed, so grey can also mean missing data, and where a membership's start year is not recorded the colour fades in from grey instead of starting at a fixed date. Membership colour never starts before the affiliation (or its earliest predecessor) was founded; Europarty colour starts no earlier than 2004, when Regulation 2004/2003 gave European political parties formal status. EP group colour only covers the years the country was in the EU (or the European Communities). Hover or focus a row for the full record.</p>
 </div>
 <div id="tip" hidden></div>
 
@@ -259,7 +252,7 @@ function render(){
     return fst(a)-fst(b) || (a.abbr||"").localeCompare(b.abbr||"");
   });
   let ticks="", lines="";
-  for(let y=Math.ceil(Y0/STEP)*STEP;y<=2025;y+=STEP){ticks+=`<span class="tick" style="left:${pct(y)}%">${y}</span>`;lines+=`<i style="left:${pct(y)}%"></i>`;}
+  for(let y=Math.ceil(Y0/STEP)*STEP;y<Y1;y+=STEP){ticks+=`<span class="tick" style="left:${pct(y)}%">${y}</span>`;lines+=`<i style="left:${pct(y)}%"></i>`;}
   let html = `<div class="axis"><span class="lab">Party</span><div class="track">${ticks}</div></div>
     <div class="rows"><div class="gridlines">${lines}<i style="left:${pct(NOW)}%;border-left:1px dashed var(--line)"></i></div>${list.map(rowHTML).join("")}</div>`;
   if(!list.length) html += `<div class="undated" style="color:var(--muted)">No parties match this filter.</div>`;
