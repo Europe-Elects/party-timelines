@@ -40,7 +40,7 @@ body{{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font
 .band .lede{{color:var(--muted)}}
 .wrap{{max-width:1240px;margin:0 auto;padding-block:22px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}}
 h1{{font-family:var(--display);font-weight:800;font-size:clamp(32px,4.8vw,50px);line-height:1;margin:0;text-transform:uppercase;letter-spacing:.02em;text-wrap:balance}}
-.lede{{color:var(--muted);max-width:68ch;margin:0}}
+.lede{{color:var(--muted);margin:0}}
 input{{font:inherit;padding:8px 12px;border:1px solid var(--rule);border-bottom:3px solid var(--navy);border-radius:2px;background:var(--surface);color:var(--fg);width:100%;max-width:320px}}
 input:focus-visible,.card:focus-visible{{outline:2px solid var(--link);outline-offset:2px}}
 .legend{{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted)}}
@@ -56,7 +56,7 @@ input:focus-visible,.card:focus-visible{{outline:2px solid var(--link);outline-o
 .mix i{{display:block;box-shadow:inset 0 0 0 1px var(--edge)}}
 .sw{{box-shadow:inset 0 0 0 1px var(--edge)}}
 .empty{{color:var(--muted)}}
-.wip{{margin:4px 0 0;max-width:72ch;padding:10px 14px;background:#fff8d6;border-left:4px solid var(--yellow);color:var(--fg);font-size:15px;line-height:1.4;border-radius:2px}}
+.wip{{margin:4px 0 0;padding:10px 14px;background:#fff8d6;border-left:4px solid var(--yellow);color:var(--fg);font-size:15px;line-height:1.4;border-radius:2px}}
 .wip b{{text-transform:uppercase;letter-spacing:.04em;color:var(--navy)}}
 </style>
 <header class="band"><div class="band-in">
